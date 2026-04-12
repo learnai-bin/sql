@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>bin/sql » datatypes</title>
+<link rel="icon" type="image/png" href="data:image/png">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="sql.css"/>
+<link rel="stylesheet" href="bin-logo.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+</head>
+<body>
+
+<canvas id="space"></canvas>
+
+<nav>
+  <div class="bin-wrap" id="binWrap">
+
+  <!-- Single sliding page -->
+  <div class="slide-page" id="slidePage">
+
+    <!-- Link track img / Link proceed name-->
+    <img class="sl-name" src="sql_logo.png" alt="SQL Logo" width="15px" height="15px"/>
+
+    <!-- Line elements -->
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+  </div>
+
+  <!-- Folder SVG -->
+  <svg class="folder-svg" viewBox="0 0 120 100">
+    <defs>
+      <!-- Vibrant: electric blue → deep purple → hot pink → orange -->
+      <linearGradient id="paintBack" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#3a6ff7"/>
+        <stop offset="40%"  stop-color="#6b30d6"/>
+        <stop offset="70%"  stop-color="#ff3cac"/>
+        <stop offset="100%" stop-color="#ff6b1a"/>
+      </linearGradient>
+      <linearGradient id="paintTab" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#ff3cac"/>
+        <stop offset="50%"  stop-color="#ff6b1a"/>
+        <stop offset="100%" stop-color="#3a6ff7"/>
+      </linearGradient>
+      <linearGradient id="paintFront" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#3a6ff7"/>
+        <stop offset="35%"  stop-color="#6b30d6"/>
+        <stop offset="65%"  stop-color="#ff3cac"/>
+        <stop offset="100%" stop-color="#ff6b1a"/>
+      </linearGradient>
+    </defs>
+    <rect class="folder-back" x="10" y="28" width="100" height="66" rx="6"/>
+    <path class="folder-tab" d="M10 28 L10 18 Q10 13 15 13 L46 13 Q51 13 53 18 L57 28 Z"/>
+
+    <g class="paper p3"><rect x="24" y="36" width="72" height="52" rx="3"/></g>
+    <g class="paper p2"><rect x="20" y="34" width="72" height="52" rx="3"/></g>
+    <g class="paper p1"><rect x="16" y="32" width="72" height="52" rx="3"/></g>
+    <g class="paper-lines">
+      <line x1="22" y1="44" x2="82" y2="44"/>
+      <line x1="22" y1="52" x2="78" y2="52"/>
+      <line x1="22" y1="60" x2="80" y2="60"/>
+      <line x1="22" y1="68" x2="72" y2="68"/>
+    </g>
+
+    <rect class="folder-front" x="10" y="28" width="100" height="66" rx="6"/>
+    <text class="bin-label" x="60" y="75">BIN</text>
+  </svg>
+
+  </div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#"        class="active">Home</a></li>
+    <li><a href="#learn">Learn</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mob-menu" id="mob">
+  <a href="#">Home</a>
+  <a href="#learn">Learn</a>
+  <a href="#projects">Projects</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<main id="void">
+
+  <!-- AI Content Section -->
+  <div id="section">
+    <div class="header">
+      <div class="header-dot"></div>
+      <h2>SQL<span>( Datatypes )<!--( Structured Query Language )--></span></h2>
+      <span>edition · 1.2</span>
+    </div>
+    <div class="scroll-body">
+
+      <div class="topic">
+        <div class="topic-tag">Overview</div>
+        <h3>What are Datatypes?</h3>
+        <p style="text-indent:24px"><em>Data</em> exists in various formats such as words, numbers, date &amp; time etc., <em class="highlight">Data types</em> are used to define
+            the kind of data that can be stored in a <em>particular Location</em>.</p>
+        <p class="or">( or )</p>
+        <p style="text-indent:24px">Simply, <em class="highlight">data types</em> explain what kind of data can be stored.</p>
+        <p>Data is available in various formats and is classified into different types based on its nature.</p>
+      </div>
+
+      <div class="topic">
+        <div class="topic-tag">path</div>
+        <h3>Types </h3>
+        <div class="timeline">
+          <div class="tl-item"><a class="tl-head" href="#char">&nbsp;CHAR</a><span class="tl-text">Stores <em>alpha-numeric</em> characters in <em>" fixed "</em> length.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#varchar">&nbsp;VARCHAR</a><span class="tl-text">Stores <em>alpha-numeric</em> characters in <em>" Variable "</em> length.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#int">&nbsp;INT</a><span class="tl-text">Stores <em>interger</em> values.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#date">&nbsp;DATE</a><span class="tl-text">Stores the data which is available in <em>date format</em></span></div>
+          <div class="tl-item"><a class="tl-head" href="#lob">&nbsp;LOB</a><span class="tl-text">It stores <em>Huge amount</em> of data.</span></div>
+        </div>
+      </div>
+
+      <div class="topic" id="char">
+        <div class="topic-tag">v1.2-char</div>
+        <h3>Char - fixed</h3>
+        <p style="text-indent:24px">It accepts ' A-Z ' , ' a-z ' , ' 0-9 ' , Special characters ( such as &amp;, %, $, ?... ) and as well as combinations of charaters and numbers, with <em>maximum length</em> of up to <em class="highlight">255</em> characters.</p>
+        <h5 class="syntax-head">Syntax :</h5>
+        <p class="syntax-code"><span class="syn-fn">CHAR(</span>&thinsp;<span class="syn-arg">n</span>&thinsp;<span class="syn-fn">)</span></p>
+        <p style="text-indent: 45px;">
+            <span class="syn-arg">n</span> : It specifies the maximum length of the string, where n can range from 0 to 255. If the string exceeds this limit, it will be truncated to fit within the specified limit.
+        </p>
+        <ul>
+            <li><code>CHAR()</code> can accept <span class="highlight">numeric digits</span> but they store them as characters ( text ), not as numbers.</li>
+            <li>The data enclosed by single quotes (<em class="highlight"> '&nbsp;&nbsp;' </em>). </li>
+            <li>It follows <em class="highlight">Fixed length Memory Allocation</em> - This can lead to wasted storage space when the stored data is shorter than the defined length.</li>
+        </ul>
+        <p>Let's take an example,</p>
+        <p style="text-indent: 12px;">
+            If you define <code>CHAR(10)</code> and store ' Hello ', it uses 5 characters to fill and remaining 5 with spaces, resulting in 'Hello<span style="letter-spacing: 2px;">_____</span>'. 
+        </p>
+
+        <!-- ── CHAR(10) BOX DIAGRAM ── -->
+        <div style="margin: 1.4rem 0 0.6rem; display:flex; flex-direction:column; align-items:flex-start; gap:0.5rem;">
+
+          <!-- Label row -->
+          <div style="display:flex; align-items:center; gap:0.5rem; padding-left:2px;">
+            <span class="code-syntax">CHAR(</span>
+            <span style="color: darkorange; font-weight: 900;" class="code-syntax">10</span>
+            <span class="code-syntax">)</span>
+          </div>
+
+          <!-- SVG boxes -->
+          <svg viewBox="0 0 340 54" xmlns="http://www.w3.org/2000/svg"
+               class="char-boxes-svg"
+               style="width:100%; max-width:260px; height:auto; overflow:visible;">
+
+            <!-- index labels -->
+            <text x="17"  y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.3">1</text>
+            <text x="51"  y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.3">2</text>
+            <text x="85"  y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.3">3</text>
+            <text x="119" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.3">4</text>
+            <text x="153" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.3">5</text>
+            <text x="187" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.22">6</text>
+            <text x="221" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.22">7</text>
+            <text x="255" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.22">8</text>
+            <text x="289" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.22">9</text>
+            <text x="323" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.22">10</text>
+
+            <!-- ── Filled cells: H e l l o ── -->
+            <rect class="cell-filled" x="1"   y="14" width="32" height="32" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+            <text x="17"  y="35" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="currentColor">H</text>
+
+            <rect class="cell-filled" x="35"  y="14" width="32" height="32" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+            <text x="51"  y="35" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="currentColor">e</text>
+
+            <rect class="cell-filled" x="69"  y="14" width="32" height="32" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+            <text x="85"  y="35" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="currentColor">l</text>
+
+            <rect class="cell-filled" x="103" y="14" width="32" height="32" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+            <text x="119" y="35" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="currentColor">l</text>
+
+            <rect class="cell-filled" x="137" y="14" width="32" height="32" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+            <text x="153" y="35" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="currentColor">o</text>
+
+            <!-- ── Empty cells: spaces 6–10 ── -->
+            <rect class="cell-empty" x="171" y="14" width="32" height="32" rx="4" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 2"/>
+            <rect class="cell-empty" x="205" y="14" width="32" height="32" rx="4" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 2"/>
+            <rect class="cell-empty" x="239" y="14" width="32" height="32" rx="4" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 2"/>
+            <rect class="cell-empty" x="273" y="14" width="32" height="32" rx="4" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 2"/>
+            <rect class="cell-empty" x="307" y="14" width="32" height="32" rx="4" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 2"/>
+          </svg>
+
+        </div>
+        <!-- ── END CHAR(10) DIAGRAM ── -->
+         <br>
+        <h4 class="drawback-title">Cons</h4>
+        <ol>
+            <li>It wastes storage space due to fixed-length allocation, as unused characters are filled with spaces.</li>
+            <li>It has a maximum limit of 255 characters, so it cannot store data beyond this length.</li>
+        </ol>
+        </div>
+      
+
+      <div class="topic" id="varchar">
+        <div class="topic-tag">v1.2-varchar</div>
+        <h3>Varchar - variable</h3>
+        <p style="text-indent:24px">It accepts ' A-Z ' , ' a-z ' , ' 0-9 ' , Special characters ( such as &amp;, %, $, ?... ) and as well as combinations of charaters and numbers, with <em>maximum length</em> of up to <em class="highlight">65535</em> characters.</p>
+        <h5 class="syntax-head">Syntax :</h5>
+        <p class="syntax-code"><span class="syn-fn">VARCHAR(</span>&thinsp;<span class="syn-arg">n</span>&thinsp;<span class="syn-fn">)</span></p>
+        <p style="text-indent: 45px;">
+            <span class="syn-arg">n</span> : It specifies the maximum length of the string, where n can range from 0 to 65535.
+        </p>
+        <ul>
+            <li>Same like <code>CHAR</code>, It accepts <span class="highlight">numeric digits</span> but they store them as characters.</li>
+            <li>The data enclosed by single quotes (<em class="highlight"> '&nbsp;&nbsp;' </em>). </li>
+            <li>It follows <em class="highlight">Variable length Memory Allocation</em> - we can also retreive unused storage space when the data is shorter than the defined length.</li>
+        </ul>
+        <p>Let's take an example,</p>
+        <p style="text-indent: 12px;">
+            If you define <code>VARCHAR(7)</code> and store ' MySQL ', it uses 5 characters to fill and remaining 3 with spaces, resulting in 'MySQL<span style="letter-spacing: 2px;">__</span>'. 
+        </p>
+
+        <!-- ── CHAR(10) BOX DIAGRAM ── -->
+        <div style="margin: 1.4rem 0 0.6rem; display:flex; flex-direction:column; align-items:flex-start; gap:0.5rem;">
+
+          <!-- Label row -->
+          <div style="display:flex; align-items:center; gap:0.5rem; padding-left:2px;">
+            <span class="code-syntax">VARCHAR(</span>
+            <span style="color: darkorange; font-weight: 900;" class="code-syntax">7</span>
+            <span class="code-syntax">)</span>
+          </div>
+
+          <!-- SVG boxes -->
+          <svg viewBox="0 0 340 54" xmlns="http://www.w3.org/2000/svg"
+               class="char-boxes-svg"
+               style="width:100%; max-width:260px; height:auto; overflow:visible;">
+
+            <!-- index labels -->
+            <text x="17"  y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.3">1</text>
+            <text x="51"  y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.3">2</text>
+            <text x="85"  y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.3">3</text>
+            <text x="119" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.3">4</text>
+            <text x="153" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.3">5</text>
+            <text x="187" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.22">&nbsp;</text>
+            <text x="221" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.22">6</text>
+            <text x="255" y="10" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="currentColor" opacity="0.22">7</text>
+
+            <!-- ── Filled cells: H e l l o ── -->
+            <rect class="cell-filled" x="1"   y="14" width="32" height="32" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+            <text x="17"  y="35" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="currentColor">M</text>
+
+            <rect class="cell-filled" x="35"  y="14" width="32" height="32" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+            <text x="51"  y="35" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="currentColor">y</text>
+
+            <rect class="cell-filled" x="69"  y="14" width="32" height="32" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+            <text x="85"  y="35" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="currentColor">S</text>
+
+            <rect class="cell-filled" x="103" y="14" width="32" height="32" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+            <text x="119" y="35" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="currentColor">Q</text>
+
+            <rect class="cell-filled" x="137" y="14" width="32" height="32" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+            <text x="153" y="35" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="currentColor">L</text>
+            
+            <rect class="cell-filled" x="171" y="14" width="0" height="32" rx="4" fill="rgba(250, 120, 10, 0.5)" stroke-width="0"/>
+            <text x="187" y="35" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="currentColor">+</text>
+            
+            <!-- ── Empty cells: spaces 6–10 ── -->
+            <rect class="cell-empty" x="205" y="14" width="32" height="32" rx="4" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 2"/>
+            <rect class="cell-empty" x="239" y="14" width="32" height="32" rx="4" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 2"/>
+          </svg>
+
+        </div>
+        <!-- ── END CHAR(10) DIAGRAM ── -->
+         <br>
+         <h4 class="drawback-title">Pros</h4>
+         <ol>
+            <li>Storage space wastage is avoided by <code>VARCHAR()</code>, as it uses variable-length allocation and stores only the actual data, the remaining space can be utilized for storing other data.</li>
+            <li>The length limit in <code>VARCHAR()</code> is more flexible, with a max size of up 65535 characters, allowing it to store much larger data.</li>
+        </ol>
+      </div>
+
+
+      <div class="topic" id="int">
+        <div class="topic-tag">v1.2-int</div>
+        <h3>Int - integer</h3>
+        <p style="text-indent:24px"><em class="highlight">INT</em> is used to store <em>integer</em> values, with a ranges from <em class="highlight">-2,14,74,83,648 </em> to <em class="highlight"> +2,14,74,83,647</em> .</p>
+        <h5 class="syntax-head">Syntax :</h5>
+        <p class="syntax-code"><span class="syn-fn">INT</span></p>
+
+      </div>
+      <div class="topic" id="rdbms">
+        <div class="topic-tag">v1.2-Date</div>
+        <h3>Date - Calender</h3>
+        <h5 class="syntax-head">Syntax :</h5>
+        <p class="syntax-code">
+          <span class="syn-fn">DATE</span>
+        </p>
+        <p style="text-indent:12px">
+          <em class="highlight">DD-Mon-YYYY</em> represents the Oracle date format, While
+          <em class="highlight">YYYY-MM-DD</em> follows the ANSI standard format.
+        </p>
+        <p style="text-indent: 10px;">
+          &nbsp;
+          <em class="highlight">DD</em> denotes the day ( 01 to 31 ).<br>
+          &nbsp;&nbsp;&nbsp;
+          <em class="highlight">MM</em> denotes the month in numeric form ( 01 to 12 )<br>
+          &nbsp;&nbsp;&nbsp;
+          <em class="highlight">Mon</em> represents the month in abbreviated text ( Jan to Dec )<br>
+          &nbsp;&nbsp;&nbsp;
+          and <em class="highlight">YYYY</em> indicates the year ( 1900 to 2026 ).
+        </p>
+
+      </div>
+      <div class="topic" id="lob">
+        <div class="topic-tag">v1.2-lob</div>
+        <h3>Large Object - Huge</h3>
+        <p style="text-indent: 24px;">
+          It is used to store <em class="highlight">large amounts</em> of data. Based on the type of data, Large Object is divided into 2 types.
+        </p>
+
+        <!-- ── FEATURES TREE ── -->
+        <div class="org-scroll-wrap">
+          <div class="org-wrap" id="orgWrap2">
+            <svg id="orgSvg2" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;"></svg>
+            <!-- nodes injected by JS -->
+          </div>
+        </div>
+        <h4>Binary Large Object</h4>
+        <p style="text-indent: 24px;">
+          It is used to store large amount of <em>binary data</em> such as images, videos, audio files etc., with a maximum size of up to 4GB.
+        </p>
+        <h4 class="syntax-head">Syntax :</h5>
+        <p class="syntax-code">
+          <span class="syn-fn">BLOB</span>
+        </p>
+        <br><br>
+        <h4>Character Large Object</h4>
+        <p style="text-indent: 24px;">
+          It is used to store large amount of <em>text data</em> such as articles, blogs, reviews etc., with a maximum size of up to 4GB.
+        </p>
+        <h4 class="syntax-head">Syntax :</h4>
+        <p class="syntax-code">
+          <span class="syn-fn">CLOB</span>
+        </p>
+      </div>
+
+      <!-- ── PAGE NAV ── -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding: 1.4rem 1rem 1.8rem;">
+
+        <!-- Previous -->
+        <a href="sqlintro.html" class="page-nav-btn" id="nav-prev">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+            <path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Previous</span>
+          <span class="nav-hint">( Basics )</span>
+        </a>
+
+        <!-- Next -->
+        <a href="sqlconst.html" class="page-nav-btn" id="nav-next">
+          <span class="nav-hint">( Constraints )</span>
+          <span>Next</span>
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+            <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+      </div>
+      <!-- ── END PAGE NAV ── -->
+
+    </div>
+  </div>
+
+  <!-- ── SIDEBAR ── -->
+  <aside id="sidebar">
+
+    <!-- Social Links -->
+    <!--
+    <div class="sb-section">
+      <div class="sb-label">Connect</div>
+      <a class="sb-link" href="https://www.instagram.com/iacc.bin/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="sb-name">Instagram</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <a class="sb-link" href="https://www.youtube.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="sb-name">YouTube</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <a class="sb-link" href="https://github.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </span>
+        <span class="sb-name">GitHub</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <a class="sb-link" href="https://x.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg>
+        </span>
+        <span class="sb-name">X / Twitter</span>
+        <span class="sb-arrow">↗</span>
+      </a> -->
+    </div>
+
+    <!-- Concepts -->
+    <div class="sb-section">
+      <div class="sb-label">Topics</div>
+      <div class="sb-concepts">
+        <span class="sb-pill">
+          SQL <span class="sb-pill-tag">DB</span>
+        </span>
+        <div class="topics">
+          <div class="topic-item" onclick="location.href='sqlintro.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlintro.html">Basics</a>
+          </div>
+          <div class="topic-item topic-item-active" onclick="location.href='sqldatatypes.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqldatatypes.html">Datatypes</a>
+          </div>
+          <div class="topic-item" onclick="location.href='sqlconst.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlconst.html">Constraints</a>
+          </div>
+          <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqloperators.html">Operators</a>
+          </div>
+          <!-- <div class="topic-item" onclick="location.href='sqlfunctions.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlfunctions.html">Functions</a>
+          </div>
+          <div class="topic-item" onclick="location.href='db.html'" style="cursor:pointer;">
+            <a class="topic-head" href="db.html">Database</a>
+          </div>
+          <div class="topic-item" onclick="location.href='ddl.html'" style="cursor:pointer;">
+            <a class="topic-head" href="ddl.html">DDL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dml.html'" style="cursor:pointer;">
+            <a class="topic-head" href="dml.html">DML</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dql.html'" style="cursor:pointer;">
+            <a class="topic-head" href="dql.html">DQL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='.html'" style="cursor:pointer;">
+            <a class="topic-head" href="subqueries.html">Sub Query</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dql.html'" style="cursor:pointer;">
+            <a class="topic-head" href="joins.html">Joins</a>
+          </div>
+          <div class="topic-item" onclick="location.href='sqlsets.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlsets.html">Set Operators</a>
+          </div>
+          <div class="topic-item" onclick="location.href='tcl.html'" style="cursor:pointer;">
+            <a class="topic-head" href="tcl.html">TCL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dcl.html'" style="cursor:pointer;">
+            <a class="topic-head" href="dcl.html">DCL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='view_trig.html'" style="cursor:pointer;">
+            <a class="topic-head" href="view_trig.html">Views, Triggers</a>
+          </div> -->
+        </div>
+      </div>
+        <!-- <a class="sb-pill" href="https://www.python.org/" target="_blank" rel="noopener">
+          Python <span class="sb-pill-tag">Lang</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Machine_learning" target="_blank" rel="noopener">
+          Machine Learning <span class="sb-pill-tag">ML</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Deep_learning" target="_blank" rel="noopener">
+          Deep Learning <span class="sb-pill-tag">DL</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Artificial_intelligence" target="_blank" rel="noopener">
+          Artificial Intelligence <span class="sb-pill-tag">AI</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Natural_language_processing" target="_blank" rel="noopener">
+          NLP <span class="sb-pill-tag">Text</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Computer_vision" target="_blank" rel="noopener">
+          Computer Vision <span class="sb-pill-tag">CV</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Reinforcement_learning" target="_blank" rel="noopener">
+          Reinforcement Learning <span class="sb-pill-tag">RL</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Data_science" target="_blank" rel="noopener">
+          Data Science <span class="sb-pill-tag">DS</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Large_language_model" target="_blank" rel="noopener">
+          LLMs <span class="sb-pill-tag">Gen</span>
+        </a> -->
+      </div>
+    </div>
+
+  </aside>
+
+</main>
+
+<!-- ══ TOPICS TOGGLE — mobile/tablet floating button ══ -->
+<div id="topic-toggle">
+
+  <!-- Slide-up topics panel -->
+  <div id="topic-panel" role="dialog" aria-label="Topics">
+    <div class="tp-panel-label">Topics</div>
+    <div class="topics">
+      <div class="topic-item" onclick="location.href='sqlintro.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlintro.html">Basics</a>
+      </div>
+      <div class="topic-item topic-item-active" onclick="location.href='sqldatatypes.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqldatatypes.html">Datatypes</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqlconst.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlconst.html">Constraints</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqloperators.html">Operators</a>
+      </div>
+      <!-- <div class="topic-item" onclick="location.href='sqlfunctions.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlfunctions.html">Functions</a>
+      </div>
+      <div class="topic-item" onclick="location.href='db.html'" style="cursor:pointer;">
+        <a class="topic-head" href="db.html">Database</a>
+      </div>
+      <div class="topic-item" onclick="location.href='ddl.html'" style="cursor:pointer;">
+        <a class="topic-head" href="ddl.html">DDL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='dml.html'" style="cursor:pointer;">
+        <a class="topic-head" href="dml.html">DML</a>
+      </div>
+      <div class="topic-item" onclick="location.href='dql.html'" style="cursor:pointer;">
+        <a class="topic-head" href="dql.html">DQL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='subqueries.html'" style="cursor:pointer;">
+        <a class="topic-head" href="subqueries.html">Sub Query</a>
+      </div>
+      <div class="topic-item" onclick="location.href='joins.html'" style="cursor:pointer;">
+        <a class="topic-head" href="joins.html">Joins</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqlsets.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlsets.html">Set Operators</a>
+      </div>
+      <div class="topic-item" onclick="location.href='tcl.html'" style="cursor:pointer;">
+        <a class="topic-head" href="tcl.html">TCL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='dcl.html'" style="cursor:pointer;">
+        <a class="topic-head" href="dcl.html">DCL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='view_trig.html'" style="cursor:pointer;">
+        <a class="topic-head" href="view_trig.html">Views, Triggers</a>
+      </div> -->
+    </div>
+  </div>
+
+  <button id="topic-toggle-btn" aria-label="Toggle topics panel" aria-expanded="false">
+    <span class="tp-icon">
+      <!-- List icon (default — panel closed) -->
+      <svg class="icon-list" viewBox="0 0 24 24">
+        <line x1="8" y1="6"  x2="21" y2="6"/>
+        <line x1="8" y1="12" x2="21" y2="12"/>
+        <line x1="8" y1="18" x2="21" y2="18"/>
+        <line x1="3" y1="6"  x2="3.01" y2="6"/>
+        <line x1="3" y1="12" x2="3.01" y2="12"/>
+        <line x1="3" y1="18" x2="3.01" y2="18"/>
+      </svg>
+      <!-- X icon (panel open) -->
+      <svg class="icon-close" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </span>
+    <span class="tp-label">Topics</span>
+  </button>
+</div>
+
+<!-- ══ THEME TOGGLE — single button ══ -->
+<div id="theme-toggle">
+  <button id="toggle-btn" aria-label="Toggle theme">
+    <span class="t-icon">
+      <!-- Sun: shown in dark mode (click → go light) -->
+      <svg class="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- Moon: shown in light mode (click → go dark) -->
+      <svg class="icon-moon" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </span>
+    <span class="t-label" id="toggle-label">Light Mode</span>
+  </button>
+</div>
+
+
+<script src="sql.js"></script>
+</body>
+</html>

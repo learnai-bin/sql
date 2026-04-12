@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>bin/sql » basics</title>
+<link rel="icon" type="image/png" href="data:image/png">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="sql.css"/>
+<link rel="stylesheet" href="bin-logo.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+</head>
+<body>
+
+<canvas id="space"></canvas>
+
+<nav>
+  <div class="bin-wrap" id="binWrap">
+
+  <!-- Single sliding page -->
+  <div class="slide-page" id="slidePage">
+
+    <!-- Link track img / Link proceed name-->
+    <img class="sl-name" src="sql_logo.png" alt="SQL Logo" width="15px" height="15px"/>
+
+    <!-- Line elements -->
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+  </div>
+
+  <!-- Folder SVG -->
+  <svg class="folder-svg" viewBox="0 0 120 100">
+    <defs>
+      <!-- Vibrant: electric blue → deep purple → hot pink → orange -->
+      <linearGradient id="paintBack" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#3a6ff7"/>
+        <stop offset="40%"  stop-color="#6b30d6"/>
+        <stop offset="70%"  stop-color="#ff3cac"/>
+        <stop offset="100%" stop-color="#ff6b1a"/>
+      </linearGradient>
+      <linearGradient id="paintTab" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#ff3cac"/>
+        <stop offset="50%"  stop-color="#ff6b1a"/>
+        <stop offset="100%" stop-color="#3a6ff7"/>
+      </linearGradient>
+      <linearGradient id="paintFront" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#3a6ff7"/>
+        <stop offset="35%"  stop-color="#6b30d6"/>
+        <stop offset="65%"  stop-color="#ff3cac"/>
+        <stop offset="100%" stop-color="#ff6b1a"/>
+      </linearGradient>
+    </defs>
+    <rect class="folder-back" x="10" y="28" width="100" height="66" rx="6"/>
+    <path class="folder-tab" d="M10 28 L10 18 Q10 13 15 13 L46 13 Q51 13 53 18 L57 28 Z"/>
+
+    <g class="paper p3"><rect x="24" y="36" width="72" height="52" rx="3"/></g>
+    <g class="paper p2"><rect x="20" y="34" width="72" height="52" rx="3"/></g>
+    <g class="paper p1"><rect x="16" y="32" width="72" height="52" rx="3"/></g>
+    <g class="paper-lines">
+      <line x1="22" y1="44" x2="82" y2="44"/>
+      <line x1="22" y1="52" x2="78" y2="52"/>
+      <line x1="22" y1="60" x2="80" y2="60"/>
+      <line x1="22" y1="68" x2="72" y2="68"/>
+    </g>
+
+    <rect class="folder-front" x="10" y="28" width="100" height="66" rx="6"/>
+    <text class="bin-label" x="60" y="75">BIN</text>
+  </svg>
+
+</div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#"        class="active">Home</a></li>
+    <li><a href="#learn">Learn</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mob-menu" id="mob">
+  <a href="#">Home</a>
+  <a href="#learn">Learn</a>
+  <a href="#projects">Projects</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<main id="void">
+
+  <!-- AI Content Section -->
+  <div id="section">
+    <div class="header">
+      <div class="header-dot"></div>
+      <h2>SQL<span><!--( Structured Query Language )--></span></h2>
+      <span>edition · 1.1</span>
+    </div>
+    <div class="scroll-body">
+
+      <div class="topic">
+        <div class="topic-tag">Overview</div>
+        <h3>What is SQL?</h3>
+        <p style="text-indent:24px"><em class="highlight">S</em>tructured <em class="highlight">Q</em>uery <em class="highlight">L</em>anguage ( SQL )
+          is the standard programming language used to manage, manipulate and retrieve data which is stored in <em class="highlight">relational databases</em>.
+          Precisely, SQL language is used for interacting with entities ( tables ) &amp; their attributes ( columns ) and tuples ( rows ) with data values in relational database
+          by using simple commands like <code>CREATE</code>, <code>SELECT</code>, <code>ALTER</code> and <code>DROP</code> to handle large amounts of data efficiently.</p>
+        <p>To understand SQL, we have to know about the basics terms like <em class="highlight"></em>Data Database, DBMS and RDBMS. How they these are related to each other ? What are the limitations and Features ?</p>
+      </div>
+
+      <div class="topic">
+        <div class="topic-tag">path</div>
+        <h3>Basics of SQL</h3>
+        <div class="timeline">
+          <div class="tl-item"><a class="tl-head" href="#data">&nbsp;Data</a><span class="tl-text">It is a rawfact which describes <em>properties</em> of an <em>Object</em>.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#database">&nbsp;Database</a><span class="tl-text">A place / medium which will store the data in <em>Systematic</em> & <em>Organized</em> Manner.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#dbms">&nbsp;DBMS</a><span class="tl-text">It is a Software which is used to maintain the DB ( data in <em>file format</em> ).</span></div>
+          <div class="tl-item"><a class="tl-head" href="#rdbms">&nbsp;RDBMS</a><span class="tl-text">Type of DBMS Software, used for DB ( but, data in <em>table format</em> )</span></div>
+        </div>
+      </div>
+
+      <div class="topic" id="data">
+        <div class="topic-tag">v1.1-data</div>
+        <h3>Data - core business assets</h3>
+        <p style="text-indent:24px"><em class="highlight">Data</em> is the raw material of <em>information</em>, collected from various sources like words, images, symbols also from observations.</p>
+        <p class="or">( or )</p>
+        <p style="text-indent: 24px;">A collection of <em class="highlight">facts</em> in the form of words, numbers and even pictures.</p>
+        <p>Let's take an example,</p>
+        <h5 style="text-indent:24px">Evolution of programming languages :</h5>
+        <ul>
+            <li><span class="highlight-text">Low</span>-level programming ( <span class="highlight-text">1940s-1950s</span> ) uses <span class="highlight-text">ASCII</span> code (0s &amp; 1s), and we directly talk to <span class="highlight-text">hardware</span>.</li>
+            <li><span class="highlight-text">Mid</span>-level programming ( <span class="highlight-text">1950s-1960s</span> ) uses <span class="highlight-text">Assembly</span> language not closer to <span class="highlight-text">hardware but readable</span>.</li>
+            <li><span class="highlight-text">High</span>-level programming ( <span class="highlight-text">1960s-present</span> ) uses <span class="highlight-text">English-like</span> syntax, <span class="highlight-text">human readable</span> - easier coding and readability.</li>
+        </ul>
+        <p style="text-indent: 12px;">In the above example, the highlighted text represents data, which consists of facts expressed as words and numbers.</p>
+      </div>
+
+      <div class="topic" id="database">
+        <div class="topic-tag">v1.1-db</div>
+        <h3>Database - Storage unit</h3>
+        <p style="text-indent:24px"><em class="highlight">Database</em> is an <em>organized</em> collection of <em>structured data</em> stored electronically in a computer system &amp; managed by DBMS.</p>
+        <p class="or">( or )</p>
+        <p style="text-indent: 24px;">A <em class="highlight">repository</em> of data - A program that stores data.</p>
+        <p>A Database is more than just storage - It is a <em>structured</em>, <em>secure</em>, <em>scalable</em> system that <em class="highlight">transforms</em> raw data into usable information.<br>
+          <em style="margin-left: 2em;">Structured</em> : Data is organized in a clear format, easy to store, manage and query.<br>
+          <em style="margin-left: 3.9em;">Secure</em> : Protects data from from unauthorised access by authentication and encryption.<br>
+          <em style="margin-left: 3.3em;">scalable</em> : Handle large amount of data. Data volume increases along with user demand without losing efficiency.<br>
+        </p>
+
+        <!-- ── DB DIAGRAM · DB LEFT · 3 FOLDERS RIGHT ── -->
+        <div style="margin:1.5rem 0 0.8rem;display:flex;justify-content:center;">
+          <svg viewBox="0 60 280 210"
+               xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+               style="width:100%;max-width:420px;height:auto;display:block;"
+               aria-label="Database on left connected to three folders on right: Records, Tables, Queries">
+
+            <!-- ─ 3 separate bent lines (folder → cluster near DB) ─ -->
+            <!-- Line 1 · Records → dot (90,120) -->
+            <path d="M196,95  C162,95  128,108 90,120"
+                  fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-opacity="0.55" stroke-linecap="round"/>
+            <!-- Line 2 · Tables → dot (90,140) -->
+            <path d="M196,157 C170,157 138,150 90,140"
+                  fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-opacity="0.55" stroke-linecap="round"/>
+            <!-- Line 3 · Queries → dot (90,160) -->
+            <path d="M196,218 C162,218 128,172 90,160"
+                  fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-opacity="0.55" stroke-linecap="round"/>
+
+
+            <!-- ─ Solid dots at DB side — spread vertically, close to DB ─ -->
+            <circle cx="90" cy="120" r="2.8" fill="#9ca3af" fill-opacity="0.65"/>
+            <circle cx="90" cy="140" r="2.8" fill="#9ca3af" fill-opacity="0.65"/>
+            <circle cx="90" cy="160" r="2.8" fill="#9ca3af" fill-opacity="0.65"/>
+
+            <!-- ─ Database image ─ -->
+            <image href="database.png" x="18" y="107" width="66" height="66"/>
+
+            <!-- ─ Folder 1 · Records · center (220,95) ─ -->
+            <g transform="translate(220,95) scale(0.35) translate(-60,-61)">
+              <rect x="10" y="28" width="100" height="66" rx="6" fill="#c45c0a"/>
+              <path d="M10 28 L10 18 Q10 13 15 13 L46 13 Q51 13 53 18 L57 28 Z" fill="#e0722a"/>
+              <g opacity="0.55"><rect x="24" y="36" width="72" height="52" rx="3" fill="#fff8f0" stroke="#e8c090" stroke-width="0.8"/></g>
+              <g opacity="0.75"><rect x="20" y="34" width="72" height="52" rx="3" fill="#fff8f0" stroke="#e8c090" stroke-width="0.8"/></g>
+              <rect x="16" y="32" width="72" height="52" rx="3" fill="#fff8f0" stroke="#e8c090" stroke-width="0.8"/>
+              <line x1="22" y1="44" x2="82" y2="44" stroke="#d4a870" stroke-width="0.7"/>
+              <line x1="22" y1="52" x2="78" y2="52" stroke="#d4a870" stroke-width="0.7"/>
+              <line x1="22" y1="60" x2="80" y2="60" stroke="#d4a870" stroke-width="0.7"/>
+              <line x1="22" y1="68" x2="72" y2="68" stroke="#d4a870" stroke-width="0.7"/>
+              <rect x="10" y="28" width="100" height="66" rx="6" fill="#f08030"/>
+            </g>
+            <!-- <text x="220" y="115" text-anchor="middle"
+              font-family="DM Mono, monospace" font-size="7.5" fill="#9ca3af" letter-spacing="0.3">&nbsp;
+            </text> -->
+
+            <!-- ─ Folder 2 · Tables · center (220,157) ─ -->
+            <g transform="translate(220,157) scale(0.35) translate(-60,-61)">
+              <rect x="10" y="28" width="100" height="66" rx="6" fill="#c45c0a"/>
+              <path d="M10 28 L10 18 Q10 13 15 13 L46 13 Q51 13 53 18 L57 28 Z" fill="#e0722a"/>
+              <g opacity="0.55"><rect x="24" y="36" width="72" height="52" rx="3" fill="#fff8f0" stroke="#e8c090" stroke-width="0.8"/></g>
+              <g opacity="0.75"><rect x="20" y="34" width="72" height="52" rx="3" fill="#fff8f0" stroke="#e8c090" stroke-width="0.8"/></g>
+              <rect x="16" y="32" width="72" height="52" rx="3" fill="#fff8f0" stroke="#e8c090" stroke-width="0.8"/>
+              <line x1="22" y1="44" x2="82" y2="44" stroke="#d4a870" stroke-width="0.7"/>
+              <line x1="22" y1="52" x2="78" y2="52" stroke="#d4a870" stroke-width="0.7"/>
+              <line x1="22" y1="60" x2="80" y2="60" stroke="#d4a870" stroke-width="0.7"/>
+              <line x1="22" y1="68" x2="72" y2="68" stroke="#d4a870" stroke-width="0.7"/>
+              <rect x="10" y="28" width="100" height="66" rx="6" fill="#f08030"/>
+            </g>
+            <!-- <text x="220" y="177" text-anchor="middle"
+              font-family="DM Mono, monospace" font-size="7.5" fill="#9ca3af" letter-spacing="0.3">&nbsp;
+            </text> -->
+
+            <!-- ─ Folder 3 · Queries · center (220,218) ─ -->
+            <g transform="translate(220,218) scale(0.35) translate(-60,-61)">
+              <rect x="10" y="28" width="100" height="66" rx="6" fill="#c45c0a"/>
+              <path d="M10 28 L10 18 Q10 13 15 13 L46 13 Q51 13 53 18 L57 28 Z" fill="#e0722a"/>
+              <g opacity="0.55"><rect x="24" y="36" width="72" height="52" rx="3" fill="#fff8f0" stroke="#e8c090" stroke-width="0.8"/></g>
+              <g opacity="0.75"><rect x="20" y="34" width="72" height="52" rx="3" fill="#fff8f0" stroke="#e8c090" stroke-width="0.8"/></g>
+              <rect x="16" y="32" width="72" height="52" rx="3" fill="#fff8f0" stroke="#e8c090" stroke-width="0.8"/>
+              <line x1="22" y1="44" x2="82" y2="44" stroke="#d4a870" stroke-width="0.7"/>
+              <line x1="22" y1="52" x2="78" y2="52" stroke="#d4a870" stroke-width="0.7"/>
+              <line x1="22" y1="60" x2="80" y2="60" stroke="#d4a870" stroke-width="0.7"/>
+              <line x1="22" y1="68" x2="72" y2="68" stroke="#d4a870" stroke-width="0.7"/>
+              <rect x="10" y="28" width="100" height="66" rx="6" fill="#f08030"/>
+            </g>
+            <!-- <text x="220" y="238" text-anchor="middle"
+              font-family="DM Mono, monospace" font-size="7.5" fill="#9ca3af" letter-spacing="0.3">&nbsp;
+            </text> -->
+
+          </svg>
+        </div>
+        <!-- ── END DB DIAGRAM ── -->
+
+        <p style="text-indent: 12px;">From the above image, the folders represent repositories that contain data in file format ( or ) tabular format, and these repositories are stored in the Database.</p>
+      </div>
+
+      <div class="topic" id="dbms">
+        <div class="topic-tag">v1.1-dbms</div>
+        <h3>DBMS - Manager</h3>
+        <p style="text-indent:24px"><em>DataBase Management System</em> shortly as DBMS, which is used to <em class="highlight">maintain</em> the database, like a store manager who stocks shelves and helps you to find items easily &amp; rapidly.</p>
+        <p style="text-indent:24px">A software that manages data in a <em>structured</em> way, often using <em class="highlight">files</em> ( or ) <em class="highlight">hierarchical</em> models. <br>
+          To communicate with DBMS software, we use <em class="highlight">QL</em> ( Query Language ).</p>
+
+        <!-- ── 3 FILE ICONS SIDE BY SIDE ── -->
+        <div style="display:flex;justify-content:center;gap:2rem;margin:1.8rem 0 0.6rem;flex-wrap:wrap;">
+
+          <!-- File 1 -->
+          <svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg"
+               style="width:88px;height:auto;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.28));">
+            <path d="M10 0 L62 0 L85 18 L85 110 L10 110 Z" fill="var(--glass-bg,#1a1a2e)" stroke="var(--accent-border,#c8ff00)" stroke-width="1.4"/>
+            <path d="M62 0 L62 18 L85 18 Z" fill="var(--accent-soft,rgba(200,255,0,0.12))" stroke="var(--accent-border,#c8ff00)" stroke-width="1.4"/>
+            <text x="18" y="42"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; Low</text>
+            <text x="18" y="57"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; 1940-1950</text>
+            <text x="18" y="72"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; ASCII</text>
+            <text x="18" y="87"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; Hardware</text>
+          </svg>
+
+          <!-- File 2 -->
+          <svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg"
+               style="width:88px;height:auto;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.28));">
+            <path d="M10 0 L62 0 L85 18 L85 110 L10 110 Z" fill="var(--glass-bg,#1a1a2e)" stroke="var(--accent-border,#c8ff00)" stroke-width="1.4"/>
+            <path d="M62 0 L62 18 L85 18 Z" fill="var(--accent-soft,rgba(200,255,0,0.12))" stroke="var(--accent-border,#c8ff00)" stroke-width="1.4"/>
+            <text x="18" y="42"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; Mid</text>
+            <text x="18" y="57"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; 1950-1960</text>
+            <text x="18" y="72"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; Assembly</text>
+            <text x="18" y="87"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; Hardware</text>
+          </svg>
+
+          <!-- File 3 -->
+          <svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg"
+               style="width:88px;height:auto;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.28));">
+            <path d="M10 0 L62 0 L85 18 L85 110 L10 110 Z" fill="var(--glass-bg,#1a1a2e)" stroke="var(--accent-border,#c8ff00)" stroke-width="1.4"/>
+            <path d="M62 0 L62 18 L85 18 Z" fill="var(--accent-soft,rgba(200,255,0,0.12))" stroke="var(--accent-border,#c8ff00)" stroke-width="1.4"/>
+            <text x="18" y="42"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; High</text>
+            <text x="18" y="57"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; 1960-now</text>
+            <text x="18" y="72"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; English</text>
+            <text x="18" y="87"  font-family="DM Mono,monospace" font-size="9.5" fill="var(--text-body,#ccc)" opacity="0.85">&bull; Software</text>
+          </svg>
+
+        </div>
+        <!-- ── END FILE ICONS ── -->
+
+        <h4 class="drawback-title">Drawback</h4>
+        <p style="text-indent: 12px;">Stores data in file format, meaning each file is dedicated to specific topic, so unused space in those files cannot be utilized for other topics. This leads to wasted storage and can slow down overall database performance.</p>
+      </div>
+      <div class="topic" id="rdbms">
+        <div class="topic-tag">v1.1-rdbms</div>
+        <h3>RDBMS - Organised Layout</h3>
+        <p style="text-indent:24px"><em>Relational Database Management System</em>, a type of DBMS that organises data in <em class="highlight">tables</em> ( <em class="highlight">relations</em> ) with rows and columns. It enforces relationships using <em>primary keys</em> &amp; <em>foreign keys</em>.</p>
+        <p style="text-indent:12px">To communicate with RDBMS, we use <em class="highlight">SQL</em> ( Structured Query Language ).</p>
+        <p style="text-indent:12px">The main reason to introduce the RDBMS is, to overcome the <em>storage</em> issues associated with earlier database systems. So, RDBMS ensures data integrity, reduces redundancy and enables efficient querying and updating of data.<br>
+          <em style="margin-left: 4.9em;">Data integrity</em> : Uniqueness of data.<br>
+          <em style="margin-left: 2em;">Reduces redundancy</em> : Minimise the repetation of data, by splitting into more tables.<br>
+        </p>
+
+        <!-- ── TABLES + SVG CONNECTOR WRAPPER ── -->
+        <div style="position:relative; display:flex; justify-content:center; width:100%;">
+
+          <!-- SVG line drawn over the tables -->
+          <svg id="tbl-connector" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:10;"></svg>
+
+          <div class="rdbms-tables-wrap" style="position:relative; flex-direction:column; align-items:flex-start; padding-left:28px;">
+
+            <!-- Table 1 · big (4 cols) · TOP -->
+            <div class="rdbms-table-block">
+              <div class="tbl-title" style="text-align:center;">Table 1</div>
+              <div style="overflow-x:auto;">
+                <table class="rdbms-tbl" id="rdbms-t1">
+                  <thead>
+                    <tr>
+                      <th class="pk" id="t1-id-header">ID</th>
+                      <th>level</th>
+                      <th>timeline</th>
+                      <th>program</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="pk">1</td>
+                      <td>Low</td>
+                      <td>1940-1950</td>
+                      <td>ASCII</td>
+                    </tr>
+                    <tr>
+                      <td class="pk">2</td>
+                      <td>Mid</td>
+                      <td>1950-1960</td>
+                      <td>Assembly</td>
+                    </tr>
+                    <tr>
+                      <td class="pk">3</td>
+                      <td>High</td>
+                      <td>1960-now</td>
+                      <td>English-like</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Table 2 · small (2 cols) · BOTTOM -->
+            <div class="rdbms-table-block">
+              <div class="tbl-title" style="text-align:center;">Table 2</div>
+              <div style="overflow-x:auto;">
+                <table class="rdbms-tbl" id="rdbms-t2">
+                  <thead>
+                    <tr>
+                      <th class="pk" id="t2-id-header">ID</th>
+                      <th>details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="pk">1</td>
+                      <td>directly talk to Hardware</td>
+                    </tr>
+                    <tr>
+                      <td class="pk">2</td>
+                      <td>Hardware but readable</td>
+                    </tr>
+                    <tr>
+                      <td class="pk">3</td>
+                      <td>Human readable</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- ── END RDBMS TABLES ── -->
+        <p style="text-indent: 12px;">
+          From the above tables, only two tables contain all data about the evolution of programming languages. The connecting lines indicate relationships between the tables, enforced through keys.
+          If we need to extend it in the future, we can simply add a new row.
+        </p>
+        <script>
+        (function() {
+          function drawTableConnector() {
+            const svg = document.getElementById('tbl-connector');
+            const t1h = document.getElementById('t1-id-header'); // Table 1 (top)
+            const t2h = document.getElementById('t2-id-header'); // Table 2 (bottom)
+            if (!svg || !t1h || !t2h) return;
+
+            svg.querySelectorAll('path, circle').forEach(e => e.remove());
+
+            const svgRect = svg.getBoundingClientRect();
+            const r1 = t1h.getBoundingClientRect(); // Table 1 ID header (top)
+            const r2 = t2h.getBoundingClientRect(); // Table 2 ID header (bottom)
+
+            // Start: left border of T1 ID, vertically centred
+            const x1 = r1.left - svgRect.left;
+            const y1 = r1.top  + r1.height / 2 - svgRect.top;
+
+            // End: left border of T2 ID, vertically centred
+            const x2 = r2.left - svgRect.left;
+            const y2 = r2.top  + r2.height / 2 - svgRect.top;
+
+            // How far left the bracket extends outside the tables
+            const bracket = 18;
+            const xLeft   = Math.min(x1, x2) - bracket;
+
+            // Rectangular path: right → left → down → right
+            // M(x1,y1) → go left to xLeft → go down to y2 → go right to x2
+            const d = `M${x1},${y1} L${xLeft},${y1} L${xLeft},${y2} L${x2},${y2}`;
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', d);
+            path.setAttribute('stroke', 'var(--accent-border, #c8ff00)');
+            path.setAttribute('stroke-width', '2.5');
+            path.setAttribute('fill', 'none');
+            path.setAttribute('stroke-linejoin', 'round');
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('opacity', '0.85');
+            svg.appendChild(path);
+
+            // Dot terminals at both ends
+            function addDot(cx, cy) {
+              const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+              c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', '3.5');
+              c.setAttribute('fill', 'var(--accent, #c8ff00)'); c.setAttribute('opacity', '0.9');
+              svg.appendChild(c);
+            }
+            addDot(x1, y1); // left border of T1 ID
+            addDot(x2, y2); // left border of T2 ID
+          }
+
+          window.addEventListener('load', drawTableConnector);
+          window.addEventListener('resize', drawTableConnector);
+          new MutationObserver(drawTableConnector)
+            .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+          setTimeout(drawTableConnector, 300);
+        })();
+        </script>
+
+      </div>
+      <div class="topic">
+        <h4 class="feature-title">Features</h4>
+        <p>There are 2 main features in both DBMS &amp; RDBMS,</p>
+        <!-- ── FEATURES TREE ── -->
+        <div class="org-scroll-wrap">
+          <div class="org-wrap" id="orgWrap2">
+            <svg id="orgSvg2" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;"></svg>
+            <!-- nodes injected by JS -->
+          </div>
+        </div>
+        <p style="text-indent:12px"><em style="margin-left: 2.6em;">Security</em> : Individual password ( users have their own password to access the database )</p>
+        <p style="text-indent:12px"><em>Authorisation</em> : Give access to specific users based on their roles with permissions.</p>
+      </div>
+
+      <!-- ── PAGE NAV ── -->
+      <div style="display:flex; justify-content:flex-end; align-items:center; padding: 1.4rem 1rem 1.8rem;">
+
+        <!-- Next -->
+        <a href="#" class="page-nav-btn" id="nav-next">
+          <span class="nav-hint">(  Datatypes )</span>
+          <span>Next</span>
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+            <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+      </div>
+      <!-- ── END PAGE NAV ── -->
+
+    </div>
+  </div>
+
+  <!-- ── SIDEBAR ── -->
+  <aside id="sidebar">
+
+    <!-- Social Links -->
+    <!--
+    <div class="sb-section">
+      <div class="sb-label">Connect</div>
+      <a class="sb-link" href="https://www.instagram.com/iacc.bin/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="sb-name">Instagram</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <a class="sb-link" href="https://www.youtube.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="sb-name">YouTube</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <a class="sb-link" href="https://github.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </span>
+        <span class="sb-name">GitHub</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <a class="sb-link" href="https://x.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg>
+        </span>
+        <span class="sb-name">X / Twitter</span>
+        <span class="sb-arrow">↗</span>
+      </a> -->
+    </div>
+
+    <!-- Concepts -->
+    <div class="sb-section">
+      <div class="sb-label">Topics</div>
+      <div class="sb-concepts">
+        <span class="sb-pill">
+          SQL <span class="sb-pill-tag">DB</span>
+        </span>
+        <div class="topics">
+          <div class="topic-item topic-item-active" onclick="location.href='sqlintro.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlintro.html">Basics</a>
+          </div>
+          <div class="topic-item" onclick="location.href='sqldatatypes.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqldatatypes.html">Datatypes</a>
+          </div>
+          <div class="topic-item" onclick="location.href='sqlconst.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlconst.html">Constraints</a>
+          </div>
+          <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqloperators.html">Operators</a>
+          </div>
+          <!-- <div class="topic-item" onclick="location.href='sqlfunctions.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlfunctions.html">Functions</a>
+          </div>
+          <div class="topic-item" onclick="location.href='db.html'" style="cursor:pointer;">
+            <a class="topic-head" href="db.html">Database</a>
+          </div>
+          <div class="topic-item" onclick="location.href='ddl.html'" style="cursor:pointer;">
+            <a class="topic-head" href="ddl.html">DDL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dml.html'" style="cursor:pointer;">
+            <a class="topic-head" href="dml.html">DML</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dql.html'" style="cursor:pointer;">
+            <a class="topic-head" href="dql.html">DQL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='.html'" style="cursor:pointer;">
+            <a class="topic-head" href="subqueries.html">Sub Query</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dql.html'" style="cursor:pointer;">
+            <a class="topic-head" href="joins.html">Joins</a>
+          </div>
+          <div class="topic-item" onclick="location.href='sqlsets.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlsets.html">Set Operators</a>
+          </div>
+          <div class="topic-item" onclick="location.href='tcl.html'" style="cursor:pointer;">
+            <a class="topic-head" href="tcl.html">TCL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dcl.html'" style="cursor:pointer;">
+            <a class="topic-head" href="dcl.html">DCL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='view_trig.html'" style="cursor:pointer;">
+            <a class="topic-head" href="view_trig.html">Views, Triggers</a>
+          </div> -->
+        </div>
+      </div>
+        <!-- <a class="sb-pill" href="https://www.python.org/" target="_blank" rel="noopener">
+          Python <span class="sb-pill-tag">Lang</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Machine_learning" target="_blank" rel="noopener">
+          Machine Learning <span class="sb-pill-tag">ML</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Deep_learning" target="_blank" rel="noopener">
+          Deep Learning <span class="sb-pill-tag">DL</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Artificial_intelligence" target="_blank" rel="noopener">
+          Artificial Intelligence <span class="sb-pill-tag">AI</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Natural_language_processing" target="_blank" rel="noopener">
+          NLP <span class="sb-pill-tag">Text</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Computer_vision" target="_blank" rel="noopener">
+          Computer Vision <span class="sb-pill-tag">CV</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Reinforcement_learning" target="_blank" rel="noopener">
+          Reinforcement Learning <span class="sb-pill-tag">RL</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Data_science" target="_blank" rel="noopener">
+          Data Science <span class="sb-pill-tag">DS</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Large_language_model" target="_blank" rel="noopener">
+          LLMs <span class="sb-pill-tag">Gen</span>
+        </a> -->
+      </div>
+    </div>
+
+  </aside>
+
+</main>
+
+<!-- ══ TOPICS TOGGLE — mobile/tablet floating button ══ -->
+<div id="topic-toggle">
+
+  <!-- Slide-up topics panel -->
+  <div id="topic-panel" role="dialog" aria-label="Topics">
+    <div class="tp-panel-label">Topics</div>
+    <div class="topics">
+      <div class="topic-item topic-item-active" onclick="location.href='sqlintro.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlintro.html">Basics</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqldatatypes.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqldatatypes.html">Datatypes</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqlconst.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlconst.html">Constraints</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqloperators.html">Operators</a>
+      </div>
+      <!-- <div class="topic-item" onclick="location.href='sqlfunctions.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlfunctions.html">Functions</a>
+      </div>
+      <div class="topic-item" onclick="location.href='db.html'" style="cursor:pointer;">
+        <a class="topic-head" href="db.html">Database</a>
+      </div>
+      <div class="topic-item" onclick="location.href='ddl.html'" style="cursor:pointer;">
+        <a class="topic-head" href="ddl.html">DDL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='dml.html'" style="cursor:pointer;">
+        <a class="topic-head" href="dml.html">DML</a>
+      </div>
+      <div class="topic-item" onclick="location.href='dql.html'" style="cursor:pointer;">
+        <a class="topic-head" href="dql.html">DQL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='subqueries.html'" style="cursor:pointer;">
+        <a class="topic-head" href="subqueries.html">Sub Query</a>
+      </div>
+      <div class="topic-item" onclick="location.href='joins.html'" style="cursor:pointer;">
+        <a class="topic-head" href="joins.html">Joins</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqlsets.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlsets.html">Set Operators</a>
+      </div>
+      <div class="topic-item" onclick="location.href='tcl.html'" style="cursor:pointer;">
+        <a class="topic-head" href="tcl.html">TCL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='dcl.html'" style="cursor:pointer;">
+        <a class="topic-head" href="dcl.html">DCL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='view_trig.html'" style="cursor:pointer;">
+        <a class="topic-head" href="view_trig.html">Views, Triggers</a>
+      </div> -->
+    </div>
+  </div>
+
+  <button id="topic-toggle-btn" aria-label="Toggle topics panel" aria-expanded="false">
+    <span class="tp-icon">
+      <!-- List icon (default — panel closed) -->
+      <svg class="icon-list" viewBox="0 0 24 24">
+        <line x1="8" y1="6"  x2="21" y2="6"/>
+        <line x1="8" y1="12" x2="21" y2="12"/>
+        <line x1="8" y1="18" x2="21" y2="18"/>
+        <line x1="3" y1="6"  x2="3.01" y2="6"/>
+        <line x1="3" y1="12" x2="3.01" y2="12"/>
+        <line x1="3" y1="18" x2="3.01" y2="18"/>
+      </svg>
+      <!-- X icon (panel open) -->
+      <svg class="icon-close" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </span>
+    <span class="tp-label">Topics</span>
+  </button>
+</div>
+
+<!-- ══ THEME TOGGLE — single button ══ -->
+<div id="theme-toggle">
+  <button id="toggle-btn" aria-label="Toggle theme">
+    <span class="t-icon">
+      <!-- Sun: shown in dark mode (click → go light) -->
+      <svg class="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- Moon: shown in light mode (click → go dark) -->
+      <svg class="icon-moon" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </span>
+    <span class="t-label" id="toggle-label">Light Mode</span>
+  </button>
+</div>
+
+
+<script src="sql.js"></script>
+</body>
+</html>
