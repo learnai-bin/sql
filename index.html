@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>bin/sql » basics</title>
+<link rel="icon" type="image/png" href="data:image/png">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="sql.css"/>
+<link rel="stylesheet" href="bin-logo.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+  .main-wrap {
+    width: 90%;
+    max-width: 780px;
+    margin: 6rem auto 3rem;
+    padding: 0;
+    border-radius: 20px;
+    overflow: visible;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.18);
+  }
+
+  .map-header {
+    background: #ffffff;
+    padding: 2rem 2.2rem 1.2rem;
+    border-bottom: 1px solid #efefef;
+  }
+  .map-header-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #b0b0b8;
+    margin-bottom: 0.3rem;
+  }
+  .map-header-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.14em;
+    color: #1a1a2e;
+  }
+
+  .topic-list {
+    background: #ffffff;
+    padding: 1.8rem 2rem 2rem;
+  }
+
+  .folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1.8rem 1rem;
+  }
+
+  .folder-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.15s;
+  }
+  .folder-item.locked { cursor: default; }
+
+  .folder-svg-wrap {
+    position: relative;
+    width: 82px;
+    height: 76px;
+  }
+
+  .mac-folder {
+    width: 82px;
+    height: 76px;
+    
+  }
+
+  .folder-db-icon {
+    position: absolute;
+    bottom: 3px;
+    right: 0px;
+    width: 28px;
+    height: 28px;
+    background: #fff;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.22);
+  }
+  .folder-db-icon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .folder-label {
+    font-family: "Manrope", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    text-align: center;
+    line-height: 1.3;
+    max-width: 96px;
+    word-break: break-word;
+  }
+
+
+
+  /* ── Scroll fix ── */
+  html, body {
+    height: auto !important;
+    overflow: auto !important;
+    overflow-x: hidden !important;
+  }
+  #void, main {
+    height: auto !important;
+    min-height: unset !important;
+    overflow: visible !important;
+  }
+  #space {
+    position: fixed !important;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute;pointer-events:none">
+  <defs>
+    <!-- Flat solid body colour via single-stop gradient (keeps url() references working) -->
+    <linearGradient id="folderBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#62bef6"/>
+      <stop offset="100%" stop-color="#62bef6"/>
+    </linearGradient>
+    <linearGradient id="folderTabGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3a8fd4"/>
+      <stop offset="100%" stop-color="#3a8fd4"/>
+    </linearGradient>
+    <linearGradient id="folderShineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<canvas id="space"></canvas>
+
+<nav>
+  <div class="bin-wrap" id="binWrap">
+
+  <!-- Single sliding page -->
+  <div class="slide-page" id="slidePage">
+    <img class="sl-name" src="sql_logo.png" alt="SQL Logo" width="15px" height="15px"/>
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+  </div>
+
+  <!-- Folder SVG -->
+  <svg class="folder-svg" viewBox="0 0 120 100">
+    <defs>
+      <linearGradient id="paintBack" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#3a6ff7"/>
+        <stop offset="40%"  stop-color="#6b30d6"/>
+        <stop offset="70%"  stop-color="#ff3cac"/>
+        <stop offset="100%" stop-color="#ff6b1a"/>
+      </linearGradient>
+      <linearGradient id="paintTab" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#ff3cac"/>
+        <stop offset="50%"  stop-color="#ff6b1a"/>
+        <stop offset="100%" stop-color="#3a6ff7"/>
+      </linearGradient>
+      <linearGradient id="paintFront" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#3a6ff7"/>
+        <stop offset="35%"  stop-color="#6b30d6"/>
+        <stop offset="65%"  stop-color="#ff3cac"/>
+        <stop offset="100%" stop-color="#ff6b1a"/>
+      </linearGradient>
+    </defs>
+    <rect class="folder-back" x="10" y="28" width="100" height="66" rx="6"/>
+    <path class="folder-tab" d="M10 28 L10 18 Q10 13 15 13 L46 13 Q51 13 53 18 L57 28 Z"/>
+    <g class="paper p3"><rect x="24" y="36" width="72" height="52" rx="3"/></g>
+    <g class="paper p2"><rect x="20" y="34" width="72" height="52" rx="3"/></g>
+    <g class="paper p1"><rect x="16" y="32" width="72" height="52" rx="3"/></g>
+    <g class="paper-lines">
+      <line x1="22" y1="44" x2="82" y2="44"/>
+      <line x1="22" y1="52" x2="78" y2="52"/>
+      <line x1="22" y1="60" x2="80" y2="60"/>
+      <line x1="22" y1="68" x2="72" y2="68"/>
+    </g>
+    <rect class="folder-front" x="10" y="28" width="100" height="66" rx="6"/>
+    <text class="bin-label" x="60" y="75">BIN</text>
+  </svg>
+
+</div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#"        class="active">Home</a></li>
+    <li><a href="#learn">Learn</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mob-menu" id="mob">
+  <a href="#">Home</a>
+  <a href="#learn">Learn</a>
+  <a href="#projects">Projects</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<main id="void">
+  <div class="main-wrap">
+    <div class="map-header">
+      <div class="map-header-label">SQL Learning Path</div>
+      <div class="map-header-title">Course Roadmap</div>
+    </div>
+
+    <div class="topic-list">
+      <div class="folder-grid">
+        
+      <a class="folder-item" href="sqlbasics.html">
+        <div class="folder-svg-wrap">
+          <svg class="mac-folder" viewBox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"/>
+            <rect x="4" y="20" width="80" height="56" rx="5" fill="url(#folderBodyGrad)"/>
+          </svg>
+          <div class="folder-db-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3a7bd5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+              <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+            </svg>
+          </div>
+        </div>
+        <span class="folder-label">Basics</span>
+      </a>
+      <a class="folder-item" href="sqldatatypes.html">
+        <div class="folder-svg-wrap">
+          <svg class="mac-folder" viewBox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"/>
+            <rect x="4" y="20" width="80" height="56" rx="5" fill="url(#folderBodyGrad)"/>
+          </svg>
+          <div class="folder-db-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3a7bd5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+              <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+            </svg>
+          </div>
+        </div>
+        <span class="folder-label">Datatypes</span>
+      </a>
+      <a class="folder-item" href="sqlconstraints.html">
+        <div class="folder-svg-wrap">
+          <svg class="mac-folder" viewBox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"/>
+            <rect x="4" y="20" width="80" height="56" rx="5" fill="url(#folderBodyGrad)"/>
+          </svg>
+          <div class="folder-db-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3a7bd5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+              <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+            </svg>
+          </div>
+        </div>
+        <span class="folder-label">Constraints</span>
+      </a>
+      <div class="folder-item locked">
+        <div class="folder-svg-wrap">
+          <svg class="mac-folder" viewBox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"/>
+            <rect x="4" y="20" width="80" height="56" rx="5" fill="url(#folderBodyGrad)"/>
+          </svg>
+          <div class="folder-db-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3a7bd5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+              <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+            </svg>
+          </div>
+        </div>
+        <span class="folder-label">Database</span>
+        
+      </div>
+      <div class="folder-item locked">
+        <div class="folder-svg-wrap">
+          <svg class="mac-folder" viewBox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"/>
+            <rect x="4" y="20" width="80" height="56" rx="5" fill="url(#folderBodyGrad)"/>
+          </svg>
+          <div class="folder-db-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3a7bd5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+              <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+            </svg>
+          </div>
+        </div>
+        <span class="folder-label">DDL</span>
+        
+      </div>
+      <div class="folder-item locked">
+        <div class="folder-svg-wrap">
+          <svg class="mac-folder" viewBox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"/>
+            <rect x="4" y="20" width="80" height="56" rx="5" fill="url(#folderBodyGrad)"/>
+          </svg>
+          <div class="folder-db-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3a7bd5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+              <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+            </svg>
+          </div>
+        </div>
+        <span class="folder-label">DML</span>
+        
+      </div>
+      <div class="folder-item locked">
+        <div class="folder-svg-wrap">
+          <svg class="mac-folder" viewBox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"/>
+            <rect x="4" y="20" width="80" height="56" rx="5" fill="url(#folderBodyGrad)"/>
+          </svg>
+          <div class="folder-db-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3a7bd5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+              <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+            </svg>
+          </div>
+        </div>
+        <span class="folder-label">DQL — Basics</span>
+        
+      </div>
+      <div class="folder-item locked">
+        <div class="folder-svg-wrap">
+          <svg class="mac-folder" viewBox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"/>
+            <rect x="4" y="20" width="80" height="56" rx="5" fill="url(#folderBodyGrad)"/>
+          </svg>
+          <div class="folder-db-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3a7bd5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+              <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+            </svg>
+          </div>
+        </div>
+        <span class="folder-label">Subqueries</span>
+        
+      </div>
+      <div class="folder-item locked">
+        <div class="folder-svg-wrap">
+          <svg class="mac-folder" viewBox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"/>
+            <rect x="4" y="20" width="80" height="56" rx="5" fill="url(#folderBodyGrad)"/>
+          </svg>
+          <div class="folder-db-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3a7bd5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+              <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+            </svg>
+          </div>
+        </div>
+        <span class="folder-label">Joins</span>
+        
+      </div>
+      <div class="folder-item locked">
+        <div class="folder-svg-wrap">
+          <svg class="mac-folder" viewBox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"/>
+            <rect x="4" y="20" width="80" height="56" rx="5" fill="url(#folderBodyGrad)"/>
+          </svg>
+          <div class="folder-db-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3a7bd5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+              <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+            </svg>
+          </div>
+        </div>
+        <span class="folder-label">TCL</span>
+        
+      </div>
+      <div class="folder-item locked">
+        <div class="folder-svg-wrap">
+          <svg class="mac-folder" viewBox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"/>
+            <rect x="4" y="20" width="80" height="56" rx="5" fill="url(#folderBodyGrad)"/>
+          </svg>
+          <div class="folder-db-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3a7bd5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+              <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+            </svg>
+          </div>
+        </div>
+        <span class="folder-label">DCL</span>
+        
+      </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ══ TOPICS TOGGLE — mobile/tablet floating button ══ -->
+<div id="topic-toggle">
+  <div id="topic-panel" role="dialog" aria-label="Topics">
+    <div class="tp-panel-label">Topics</div>
+    <div class="topics">
+      <div class="topic-item topic-item-active" onclick="location.href='sqlbasics.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlbasics.html">Basics</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqldatatypes.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqldatatypes.html">Datatypes</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqlconstraints.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlconstraints.html">Constraints</a>
+      </div>
+      <!-- <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqloperators.html">Operators</a>
+      </div> -->
+    </div>
+  </div>
+
+  <button id="topic-toggle-btn" aria-label="Toggle topics panel" aria-expanded="false">
+    <span class="tp-icon">
+      <svg class="icon-list" viewBox="0 0 24 24">
+        <line x1="8" y1="6"  x2="21" y2="6"/>
+        <line x1="8" y1="12" x2="21" y2="12"/>
+        <line x1="8" y1="18" x2="21" y2="18"/>
+        <line x1="3" y1="6"  x2="3.01" y2="6"/>
+        <line x1="3" y1="12" x2="3.01" y2="12"/>
+        <line x1="3" y1="18" x2="3.01" y2="18"/>
+      </svg>
+      <svg class="icon-close" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </span>
+    <span class="tp-label">Topics</span>
+  </button>
+</div>
+
+<!-- ══ THEME TOGGLE — single button ══ -->
+<div id="theme-toggle">
+  <button id="toggle-btn" aria-label="Toggle theme">
+    <span class="t-icon">
+      <svg class="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </span>
+    <span class="t-label" id="toggle-label">Light Mode</span>
+  </button>
+</div>
+
+
+<script src="sql.js"></script>
+</body>
+</html>
