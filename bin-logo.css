@@ -1,0 +1,164 @@
+.bin-wrap {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ══════════════════════
+   SLIDING PAGE (click)
+══════════════════════ */
+.slide-page {
+  position: absolute;
+  top: 13px;
+  left: 63px;
+  /* for big logo :-
+   left: 112px;
+    width: 82px;
+    height: 100px;
+  */
+  width: 49px;
+  height: 26px;
+  border-radius: 5px;
+  background: #ffffff;
+  border: 1px solid #d4b0f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 4px 4px 3px;
+  /* for big logo :-
+    padding: 9px 8px 7px;
+  */
+  gap: 2px;
+  z-index: 2;
+  /* hidden — tucked behind folder */
+  transform: translateX(-52px);
+  /* for big logo :-
+    transform: translateX(-105px);
+  */
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.42s cubic-bezier(.34,1.2,.64,1),
+              opacity  0.30s ease;
+}
+.slide-page.visible {
+  transform: translateX(0);
+  opacity: 1;
+  transition-delay: 0.12s;
+}
+
+.sl-line {
+  height: 1px;
+  /* for big logo :-
+    height: 1.5px;
+  */
+  border-radius: 1px;
+  background: #b080e0;
+}
+.sl-line:nth-child(1) { width: 80%; }
+/* .sl-line:nth-child(2) { width: 100%; } */
+.sl-line:nth-child(3) { width: 65%; }
+.sl-line:nth-child(4) { width: 90%; }
+.sl-line:nth-child(5) { width: 55%; }
+
+.sl-name {
+  margin-top: 1;
+  font-size: 10px;
+  /* for big logo :-
+    font-size: 7.5px;
+  */
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(107,48,214,0.8);
+}
+
+/* ══════════════════
+   FOLDER
+══════════════════ */
+.folder-svg {
+  width: 60px;
+  height: 50px;
+  /* for big logo :-
+    width: 120px;
+    height: 100px;
+  */
+  overflow: visible;
+  position: relative;
+  z-index: 10;
+}
+
+.folder-back { }
+
+.folder-tab {
+  transform-origin: 20px 24px;
+  transition: transform 0.32s cubic-bezier(.34,1.56,.64,1);
+}
+.folder-front {
+  transform-origin: 60px 105px;
+  transition: transform 0.32s cubic-bezier(.34,1.56,.64,1);
+}
+.paper {
+  fill: #ffffff;
+  stroke: #d4b0f0;
+  stroke-width: 0.8;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.22s, transform 0.28s;
+}
+.paper-lines line {
+  stroke: #b080e0;
+  stroke-width: 0.7;
+  opacity: 0;
+  transition: opacity 0.22s;
+}
+.bin-label {
+  font-family: 'Arial Black', 'Impact', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  fill: rgba(255,255,255,0.95); paint-order: stroke fill; stroke: rgba(80,20,160,0.25); stroke-width: 1px;
+  text-anchor: middle;
+  letter-spacing: 4px;
+  pointer-events: none;
+  transition: transform 0.32s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
+  transform-origin: 60px 75px;
+}
+
+/* ── HOVER: slight open ── */
+.bin-wrap:hover .folder-tab {
+  transform: rotate(-12deg) translateY(-3px) translateX(-1px);
+}
+.bin-wrap:hover .folder-front {
+  transform: rotate(-5deg) translateY(-5px) translateX(-1px);
+}
+.bin-wrap:hover .bin-label {
+  transform: rotate(-5deg) translateY(-5px) translateX(-1px);
+  opacity: 0.75;
+}
+.bin-wrap:hover .paper       { opacity: 1; transform: translateY(0); }
+.bin-wrap:hover .paper-lines line { opacity: 1; }
+.bin-wrap:hover .p1 { transition-delay: 0.05s; }
+.bin-wrap:hover .p2 { transition-delay: 0.10s; }
+.bin-wrap:hover .p3 { transition-delay: 0.15s; }
+.bin-wrap:hover .paper-lines line { transition-delay: 0.18s; }
+
+/* ── OPEN (click): swings fully open ── */
+.bin-wrap.open .folder-tab {
+  transform: rotate(-35deg) translateY(-8px) translateX(-4px) !important;
+}
+.bin-wrap.open .folder-front {
+  transform: rotate(-22deg) translateY(-18px) translateX(-6px) !important;
+}
+.bin-wrap.open .bin-label {
+  transform: rotate(-22deg) translateY(-18px) translateX(-6px) !important;
+  opacity: 0.2 !important;
+}
+.bin-wrap.open .paper       { opacity: 1 !important; transform: translateY(0) !important; }
+.bin-wrap.open .paper-lines line { opacity: 1 !important; }
+.bin-wrap.open .p1 { transition-delay: 0.05s; }
+.bin-wrap.open .p2 { transition-delay: 0.10s; }
+.bin-wrap.open .p3 { transition-delay: 0.15s; }
