@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+
+<html data-theme="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>bin/sql » basics</title>
+<link href="data:image/png" rel="icon" type="image/png"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=DM+Mono:wght@300;400&amp;family=Lora:ital,wght@0,400;0,500;0,600;1,400&amp;family=Manrope:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="sql.css" rel="stylesheet"/>
+<link href="bin-logo.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<style>
+  .main-wrap {
+    width: 90%;
+    max-width: 780px;
+    margin: 6rem auto 3rem;
+    padding: 0;
+    border-radius: 20px;
+    overflow: visible;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.18);
+  }
+
+  .map-header {
+    background: #ffffff;
+    padding: 2rem 2.2rem 1.2rem;
+    border-bottom: 1px solid #efefef;
+  }
+  .map-header-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #b0b0b8;
+    margin-bottom: 0.3rem;
+  }
+  .map-header-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.14em;
+    color: #1a1a2e;
+  }
+
+  .topic-list {
+    background: #ffffff;
+    padding: 1.8rem 2rem 2rem;
+  }
+
+  .folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1.8rem 1rem;
+  }
+
+  .folder-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: default;
+    text-decoration: none;
+    transition: transform 0.15s;
+    pointer-events: none;
+  }
+  .folder-item .folder-svg-wrap {
+    pointer-events: all;
+    cursor: pointer;
+  }
+  .folder-item.locked .folder-svg-wrap { cursor: default; pointer-events: none; }
+
+  .folder-svg-wrap {
+    position: relative;
+    width: 82px;
+    height: 76px;
+  }
+
+  .mac-folder {
+    width: 82px;
+    height: 76px;
+    pointer-events: none;
+  }
+  .mac-folder path,
+  .mac-folder rect {
+    pointer-events: all;
+  }
+
+  .folder-db-icon {
+    position: absolute;
+    bottom: 1px;
+    right: 0px;
+    width: 28px;
+    height: 28px;
+    background: #fff;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.22);
+  }
+  .folder-db-icon svg {
+    width: 15px;
+    height: 15px;
+    display: block;
+    margin: auto;
+    overflow: visible;
+  }
+
+  .folder-label {
+    font-family: "Manrope", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    text-align: center;
+    line-height: 1.3;
+    max-width: 96px;
+    word-break: break-word;
+  }
+
+
+
+  /* ── Scroll fix ── */
+  html, body {
+    height: auto !important;
+    overflow: auto !important;
+    overflow-x: hidden !important;
+  }
+  #void, main {
+    height: auto !important;
+    min-height: unset !important;
+    overflow: visible !important;
+  }
+  #space {
+    position: fixed !important;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  
+  /* ── Hover: scoped to folder graphic only ── */
+  .folder-svg-wrap {
+    overflow: visible !important;
+    perspective: 300px;
+    perspective-origin: center center;
+  }
+
+  .mac-folder {
+    transform-style: preserve-3d;
+    overflow: visible;
+  }
+
+  /* Hide db icon for ALL folders on hover over folder graphic */
+  .folder-db-icon {
+    transition: opacity 0.18s ease, visibility 0.18s ease;
+    opacity: 1;
+    visibility: visible;
+  }
+  .folder-svg-wrap:hover .folder-db-icon {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Front flap tilts only when hovering folder graphic */
+  .folder-item .front-flap-group {
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: center bottom;
+    transform: rotateX(0deg);
+  }
+  .folder-svg-wrap:hover .front-flap-group {
+    transform-origin: center bottom;
+    transform: rotateX(-25deg);
+  }
+
+  /* White paper rise on click */
+  .white-paper {
+    transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+  }
+  .folder-item.clicking .white-paper {
+    transform: translateY(-18px);
+  }
+
+  /* Smooth path morph on flap paths */
+  .front-flap-group .front-flap {
+    transition: d 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* SQL badge shine on click */
+  .sql-badge-text,
+  .sql-badge-border {
+    transition: fill 0.3s, stroke 0.3s, filter 0.3s, transform 0.3s;
+    transform-origin: center;
+  }
+  .folder-item.clicking .sql-badge-text {
+    fill: #a0a0a0;
+    filter: drop-shadow(0px 0px 3px rgba(255,255,255,0.9)) drop-shadow(1px -1px 4px rgba(200,200,255,0.8));
+  }
+  .folder-item.clicking .sql-badge-border {
+    stroke: #a0a0a0;
+    filter: drop-shadow(0px 0px 3px rgba(255,255,255,0.9)) drop-shadow(1px -1px 4px rgba(200,200,255,0.8));
+  }
+</style>
+<script>
+  // Normal path (rectangle with rounded top corners)
+  const FLAP_NORMAL = "M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z";
+  // Hover path: top widens 5px each side, bottom stays same (x=4 to x=84)
+  const FLAP_HOVER  = "M-1,26 L89,26 L84,79 L4,79 Z";
+
+  function setFlapPaths(folderItem, pathD) {
+    folderItem.querySelectorAll('.front-flap').forEach(p => p.setAttribute('d', pathD));
+  }
+
+  // Clear any leftover clicking/hover state (handles bfcache restore on back navigation)
+  function clearClickingState() {
+    document.querySelectorAll('.folder-item.clicking').forEach(el => {
+      el.classList.remove('clicking');
+    });
+    // Reset all flap paths and transforms back to normal state
+    document.querySelectorAll('.folder-item').forEach(item => {
+      setFlapPaths(item, FLAP_NORMAL);
+      // Force reset the front-flap-group rotateX so hover works again after bfcache restore
+      item.querySelectorAll('.front-flap-group').forEach(group => {
+        group.style.transition = 'none';
+        group.style.transform = 'rotateX(0deg)';
+        // Re-enable transition after a frame so it animates normally on next hover
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            group.style.transition = '';
+            group.style.transform = '';
+          });
+        });
+      });
+    });
+  }
+
+  function applyHoverToElementUnderCursor() {
+    document.querySelectorAll('.folder-svg-wrap').forEach(wrap => {
+      const item = wrap.closest('.folder-item');
+      const rect = wrap.getBoundingClientRect();
+      if (
+        window._mouseX >= rect.left && window._mouseX <= rect.right &&
+        window._mouseY >= rect.top  && window._mouseY <= rect.bottom
+      ) {
+        setFlapPaths(item, FLAP_HOVER);
+      } else {
+        setFlapPaths(item, FLAP_NORMAL);
+      }
+    });
+  }
+
+  // Track mouse position globally at all times
+  document.addEventListener('mousemove', (e) => {
+    window._mouseX = e.clientX;
+    window._mouseY = e.clientY;
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    clearClickingState();
+
+    // Hover: scope to folder-svg-wrap only
+    document.querySelectorAll('.folder-svg-wrap').forEach(wrap => {
+      const item = wrap.closest('.folder-item');
+      wrap.addEventListener('mouseenter', () => setFlapPaths(item, FLAP_HOVER));
+      wrap.addEventListener('mouseleave', () => setFlapPaths(item, FLAP_NORMAL));
+    });
+
+    // Click: white paper rises, then navigate — scoped to folder-svg-wrap only
+    document.querySelectorAll('a.folder-item .folder-svg-wrap').forEach(wrap => {
+      wrap.addEventListener('click', function(e) {
+        e.preventDefault();
+        const link = this.closest('a.folder-item');
+        const href = link.getAttribute('href');
+        link.classList.add('clicking');
+        setTimeout(() => {
+          window.location.href = href;
+        }, 400);
+      });
+    });
+  });
+
+  // Fires when page is restored from bfcache (browser back/forward)
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      clearClickingState();
+      // If cursor is already over a folder (no mouseenter fires on restore), apply hover manually
+      requestAnimationFrame(() => applyHoverToElementUnderCursor());
+    }
+  });
+</script>
+</head>
+<body>
+<svg height="0" style="position:absolute;pointer-events:none" width="0">
+<defs>
+<!-- Flat solid body colour via single-stop gradient (keeps url() references working) -->
+<lineargradient id="folderBodyGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#62bef6"></stop>
+<stop offset="100%" stop-color="#62bef6"></stop>
+</lineargradient>
+<lineargradient id="folderTabGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#62bef6"></stop>
+<stop offset="100%" stop-color="#62bef6"></stop>
+</lineargradient>
+<lineargradient id="folderShineGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="rgba(255,255,255,0.55)"></stop>
+<stop offset="100%" stop-color="rgba(255,255,255,0.10)"></stop>
+</lineargradient>
+<filter id="whitePaperShadow" x="-30%" y="-30%" width="160%" height="400%">
+  <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="rgba(0,0,0,0.25)" flood-opacity="1"/>
+  <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="rgba(0,0,0,0.35)" flood-opacity="1"/>
+  <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="rgba(0,0,0,0.2)" flood-opacity="1"/>
+</filter>
+</defs>
+</svg>
+<canvas id="space"></canvas>
+<nav>
+<div class="bin-wrap" id="binWrap">
+<!-- Single sliding page -->
+<div class="slide-page" id="slidePage">
+<img alt="SQL Logo" class="sl-name" height="15px" src="sql_logo.png" width="15px"/>
+<div class="sl-line"></div>
+<div class="sl-line"></div>
+<div class="sl-line"></div>
+<div class="sl-line"></div>
+</div>
+<!-- Folder SVG -->
+<svg class="folder-svg" viewbox="0 0 120 100">
+<defs>
+<lineargradient id="paintBack" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#3a6ff7"></stop>
+<stop offset="40%" stop-color="#6b30d6"></stop>
+<stop offset="70%" stop-color="#ff3cac"></stop>
+<stop offset="100%" stop-color="#ff6b1a"></stop>
+</lineargradient>
+<lineargradient id="paintTab" x1="0%" x2="100%" y1="100%" y2="0%">
+<stop offset="0%" stop-color="#ff3cac"></stop>
+<stop offset="50%" stop-color="#ff6b1a"></stop>
+<stop offset="100%" stop-color="#3a6ff7"></stop>
+</lineargradient>
+<lineargradient id="paintFront" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#3a6ff7"></stop>
+<stop offset="35%" stop-color="#6b30d6"></stop>
+<stop offset="65%" stop-color="#ff3cac"></stop>
+<stop offset="100%" stop-color="#ff6b1a"></stop>
+</lineargradient>
+</defs>
+<rect class="folder-back" height="66" rx="6" width="100" x="10" y="28"></rect>
+<path class="folder-tab" d="M10 28 L10 18 Q10 13 15 13 L46 13 Q51 13 53 18 L57 28 Z"></path>
+<g class="paper p3"><rect height="52" rx="3" width="72" x="24" y="36"></rect></g>
+<g class="paper p2"><rect height="52" rx="3" width="72" x="20" y="34"></rect></g>
+<g class="paper p1"><rect height="52" rx="3" width="72" x="16" y="32"></rect></g>
+<g class="paper-lines">
+<line x1="22" x2="82" y1="44" y2="44"></line>
+<line x1="22" x2="78" y1="52" y2="52"></line>
+<line x1="22" x2="80" y1="60" y2="60"></line>
+<line x1="22" x2="72" y1="68" y2="68"></line>
+</g>
+<rect class="folder-front" height="66" rx="6" width="100" x="10" y="28"></rect>
+<text class="bin-label" x="60" y="75">BIN</text>
+</svg>
+</div>
+<ul class="nav-links" id="nav-links">
+<li><a class="active" href="#">Home</a></li>
+<li><a href="#learn">Learn</a></li>
+<li><a href="#projects">Projects</a></li>
+<li><a href="#about">About</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+<button aria-label="Menu" class="burger" id="burger">
+<span></span><span></span><span></span>
+</button>
+</nav>
+<div class="mob-menu" id="mob">
+<a href="#">Home</a>
+<a href="#learn">Learn</a>
+<a href="#projects">Projects</a>
+<a href="#about">About</a>
+<a href="#contact">Contact</a>
+</div>
+<main id="void">
+<div class="main-wrap">
+<div class="map-header">
+<div class="map-header-label">SQL Learning Path</div>
+<div class="map-header-title">Course Roadmap</div>
+</div>
+<div class="topic-list">
+<div class="folder-grid">
+<a class="folder-item" href="sqlbasics.html">
+<div class="folder-svg-wrap">
+<svg class="mac-folder" viewbox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK: tab + full body (rounded top-left & top-right, straight bottom) -->
+<path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"></path>
+<path d="M4 76 L4 25 Q4 20 9 20 L79 20 Q84 20 84 25 L84 76 Z" fill="url(#folderBodyGrad)"></path>
+<!-- WHITE PAPER: sits between back and front, narrower to not cover rounded corners -->
+<g class="white-paper">
+<rect fill="white" height="50" opacity="0.95" rx="2.5" width="65" x="12" y="22" filter="url(#whitePaperShadow)"></rect>
+<rect x="58" y="36" width="17" height="10" rx="1" fill="none" stroke="#c8c8c8" stroke-width="0.7" opacity="0.85" class="sql-badge-border"></rect>
+<text x="74" y="44" text-anchor="end" font-family="'DM Mono', monospace" font-size="7" font-weight="600" fill="#c8c8c8" opacity="0.85" letter-spacing="0.5" class="sql-badge-text">SQL</text>
+</g>
+<!-- FRONT FLAP: 80% of body height, anchored to bottom -->
+<g class="front-flap-group">
+  <path class="front-flap flap-fill" fill="url(#folderBodyGrad)" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-shine" fill="url(#folderShineGrad)" opacity="0.35" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-stroke" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.8" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+</g>
+
+
+</svg>
+<div class="folder-db-icon">
+<svg fill="none" stroke="#3a7bd5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 2 24 19">
+<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+<path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
+<path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"></path>
+<path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"></path>
+</svg>
+</div></div>
+<span class="folder-label">Basics</span>
+</a>
+<a class="folder-item" href="sqldatatypes.html">
+<div class="folder-svg-wrap">
+<svg class="mac-folder" viewbox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK: tab + full body (rounded top-left & top-right, straight bottom) -->
+<path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"></path>
+<path d="M4 76 L4 25 Q4 20 9 20 L79 20 Q84 20 84 25 L84 76 Z" fill="url(#folderBodyGrad)"></path>
+<!-- WHITE PAPER: sits between back and front, narrower to not cover rounded corners -->
+<g class="white-paper">
+<rect fill="white" height="50" opacity="0.95" rx="2.5" width="65" x="12" y="22" filter="url(#whitePaperShadow)"></rect>
+<rect x="58" y="36" width="17" height="10" rx="1" fill="none" stroke="#c8c8c8" stroke-width="0.7" opacity="0.85" class="sql-badge-border"></rect>
+<text x="74" y="44" text-anchor="end" font-family="'DM Mono', monospace" font-size="7" font-weight="600" fill="#c8c8c8" opacity="0.85" letter-spacing="0.5" class="sql-badge-text">SQL</text>
+</g>
+<!-- FRONT FLAP: 80% of body height, anchored to bottom -->
+<g class="front-flap-group">
+  <path class="front-flap flap-fill" fill="url(#folderBodyGrad)" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-shine" fill="url(#folderShineGrad)" opacity="0.35" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-stroke" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.8" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+</g>
+
+
+</svg>
+<div class="folder-db-icon">
+<svg fill="none" stroke="#3a7bd5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 2 24 19">
+<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+<path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
+<path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"></path>
+<path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"></path>
+</svg>
+</div></div>
+<span class="folder-label">Datatypes</span>
+</a>
+<a class="folder-item" href="sqlconstraints.html">
+<div class="folder-svg-wrap">
+<svg class="mac-folder" viewbox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK: tab + full body (rounded top-left & top-right, straight bottom) -->
+<path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"></path>
+<path d="M4 76 L4 25 Q4 20 9 20 L79 20 Q84 20 84 25 L84 76 Z" fill="url(#folderBodyGrad)"></path>
+<!-- WHITE PAPER: sits between back and front, narrower to not cover rounded corners -->
+<g class="white-paper">
+<rect fill="white" height="50" opacity="0.95" rx="2.5" width="65" x="12" y="22" filter="url(#whitePaperShadow)"></rect>
+<rect x="58" y="36" width="17" height="10" rx="1" fill="none" stroke="#c8c8c8" stroke-width="0.7" opacity="0.85" class="sql-badge-border"></rect>
+<text x="74" y="44" text-anchor="end" font-family="'DM Mono', monospace" font-size="7" font-weight="600" fill="#c8c8c8" opacity="0.85" letter-spacing="0.5" class="sql-badge-text">SQL</text>
+</g>
+<!-- FRONT FLAP: 80% of body height, anchored to bottom -->
+<g class="front-flap-group">
+  <path class="front-flap flap-fill" fill="url(#folderBodyGrad)" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-shine" fill="url(#folderShineGrad)" opacity="0.35" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-stroke" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.8" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+</g>
+
+
+</svg>
+<div class="folder-db-icon">
+<svg fill="none" stroke="#3a7bd5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 2 24 19">
+<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+<path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
+<path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"></path>
+<path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"></path>
+</svg>
+</div></div>
+<span class="folder-label">Constraints</span>
+</a>
+<div class="folder-item locked">
+<div class="folder-svg-wrap">
+<svg class="mac-folder" viewbox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK: tab + full body (rounded top-left & top-right, straight bottom) -->
+<path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"></path>
+<path d="M4 76 L4 25 Q4 20 9 20 L79 20 Q84 20 84 25 L84 76 Z" fill="url(#folderBodyGrad)"></path>
+<!-- WHITE PAPER: sits between back and front, narrower to not cover rounded corners -->
+<!-- FRONT FLAP: 80% of body height, anchored to bottom -->
+<g class="front-flap-group">
+  <path class="front-flap flap-fill" fill="url(#folderBodyGrad)" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-shine" fill="url(#folderShineGrad)" opacity="0.35" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-stroke" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.8" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+</g>
+</svg>
+<div class="folder-db-icon">
+<svg fill="none" stroke="#3a7bd5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 2 24 19">
+<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+<path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
+<path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"></path>
+<path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"></path>
+</svg>
+</div></div>
+<span class="folder-label">Database</span>
+</div>
+<div class="folder-item locked">
+<div class="folder-svg-wrap">
+<svg class="mac-folder" viewbox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK: tab + full body (rounded top-left & top-right, straight bottom) -->
+<path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"></path>
+<path d="M4 76 L4 25 Q4 20 9 20 L79 20 Q84 20 84 25 L84 76 Z" fill="url(#folderBodyGrad)"></path>
+<!-- WHITE PAPER: sits between back and front, narrower to not cover rounded corners -->
+<!-- FRONT FLAP: 80% of body height, anchored to bottom -->
+<g class="front-flap-group">
+  <path class="front-flap flap-fill" fill="url(#folderBodyGrad)" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-shine" fill="url(#folderShineGrad)" opacity="0.35" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-stroke" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.8" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+</g>
+</svg>
+<div class="folder-db-icon">
+<svg fill="none" stroke="#3a7bd5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 2 24 19">
+<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+<path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
+<path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"></path>
+<path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"></path>
+</svg>
+</div></div>
+<span class="folder-label">DDL</span>
+</div>
+<div class="folder-item locked">
+<div class="folder-svg-wrap">
+<svg class="mac-folder" viewbox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK: tab + full body (rounded top-left & top-right, straight bottom) -->
+<path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"></path>
+<path d="M4 76 L4 25 Q4 20 9 20 L79 20 Q84 20 84 25 L84 76 Z" fill="url(#folderBodyGrad)"></path>
+<!-- WHITE PAPER: sits between back and front, narrower to not cover rounded corners -->
+<!-- FRONT FLAP: 80% of body height, anchored to bottom -->
+<g class="front-flap-group">
+  <path class="front-flap flap-fill" fill="url(#folderBodyGrad)" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-shine" fill="url(#folderShineGrad)" opacity="0.35" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-stroke" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.8" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+</g>
+</svg>
+<div class="folder-db-icon">
+<svg fill="none" stroke="#3a7bd5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 2 24 19">
+<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+<path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
+<path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"></path>
+<path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"></path>
+</svg>
+</div></div>
+<span class="folder-label">DML</span>
+</div>
+<div class="folder-item locked">
+<div class="folder-svg-wrap">
+<svg class="mac-folder" viewbox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK: tab + full body (rounded top-left & top-right, straight bottom) -->
+<path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"></path>
+<path d="M4 76 L4 25 Q4 20 9 20 L79 20 Q84 20 84 25 L84 76 Z" fill="url(#folderBodyGrad)"></path>
+<!-- WHITE PAPER: sits between back and front, narrower to not cover rounded corners -->
+<!-- FRONT FLAP: 80% of body height, anchored to bottom -->
+<g class="front-flap-group">
+  <path class="front-flap flap-fill" fill="url(#folderBodyGrad)" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-shine" fill="url(#folderShineGrad)" opacity="0.35" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-stroke" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.8" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+</g>
+</svg>
+<div class="folder-db-icon">
+<svg fill="none" stroke="#3a7bd5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 2 24 19">
+<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+<path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
+<path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"></path>
+<path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"></path>
+</svg>
+</div></div>
+<span class="folder-label">DQL — Basics</span>
+</div>
+<div class="folder-item locked">
+<div class="folder-svg-wrap">
+<svg class="mac-folder" viewbox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK: tab + full body (rounded top-left & top-right, straight bottom) -->
+<path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"></path>
+<path d="M4 76 L4 25 Q4 20 9 20 L79 20 Q84 20 84 25 L84 76 Z" fill="url(#folderBodyGrad)"></path>
+<!-- WHITE PAPER: sits between back and front, narrower to not cover rounded corners -->
+<!-- FRONT FLAP: 80% of body height, anchored to bottom -->
+<g class="front-flap-group">
+  <path class="front-flap flap-fill" fill="url(#folderBodyGrad)" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-shine" fill="url(#folderShineGrad)" opacity="0.35" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-stroke" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.8" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+</g>
+</svg>
+<div class="folder-db-icon">
+<svg fill="none" stroke="#3a7bd5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 2 24 19">
+<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+<path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
+<path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"></path>
+<path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"></path>
+</svg>
+</div></div>
+<span class="folder-label">Subqueries</span>
+</div>
+<div class="folder-item locked">
+<div class="folder-svg-wrap">
+<svg class="mac-folder" viewbox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK: tab + full body (rounded top-left & top-right, straight bottom) -->
+<path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"></path>
+<path d="M4 76 L4 25 Q4 20 9 20 L79 20 Q84 20 84 25 L84 76 Z" fill="url(#folderBodyGrad)"></path>
+<!-- WHITE PAPER: sits between back and front, narrower to not cover rounded corners -->
+<!-- FRONT FLAP: 80% of body height, anchored to bottom -->
+<g class="front-flap-group">
+  <path class="front-flap flap-fill" fill="url(#folderBodyGrad)" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-shine" fill="url(#folderShineGrad)" opacity="0.35" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-stroke" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.8" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+</g>
+</svg>
+<div class="folder-db-icon">
+<svg fill="none" stroke="#3a7bd5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 2 24 19">
+<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+<path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
+<path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"></path>
+<path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"></path>
+</svg>
+</div></div>
+<span class="folder-label">Joins</span>
+</div>
+<div class="folder-item locked">
+<div class="folder-svg-wrap">
+<svg class="mac-folder" viewbox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK: tab + full body (rounded top-left & top-right, straight bottom) -->
+<path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"></path>
+<path d="M4 76 L4 25 Q4 20 9 20 L79 20 Q84 20 84 25 L84 76 Z" fill="url(#folderBodyGrad)"></path>
+<!-- WHITE PAPER: sits between back and front, narrower to not cover rounded corners -->
+<!-- FRONT FLAP: 80% of body height, anchored to bottom -->
+<g class="front-flap-group">
+  <path class="front-flap flap-fill" fill="url(#folderBodyGrad)" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-shine" fill="url(#folderShineGrad)" opacity="0.35" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-stroke" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.8" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+</g>
+</svg>
+<div class="folder-db-icon">
+<svg fill="none" stroke="#3a7bd5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 2 24 19">
+<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+<path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
+<path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"></path>
+<path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"></path>
+</svg>
+</div></div>
+<span class="folder-label">TCL</span>
+</div>
+<div class="folder-item locked">
+<div class="folder-svg-wrap">
+<svg class="mac-folder" viewbox="0 0 88 80" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK: tab + full body (rounded top-left & top-right, straight bottom) -->
+<path d="M4 22 L4 18 Q4 15 8 15 L32 15 Q36 15 38 18 L42 22 Z" fill="url(#folderTabGrad)"></path>
+<path d="M4 76 L4 25 Q4 20 9 20 L79 20 Q84 20 84 25 L84 76 Z" fill="url(#folderBodyGrad)"></path>
+<!-- WHITE PAPER: sits between back and front, narrower to not cover rounded corners -->
+<!-- FRONT FLAP: 80% of body height, anchored to bottom -->
+<g class="front-flap-group">
+  <path class="front-flap flap-fill" fill="url(#folderBodyGrad)" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-shine" fill="url(#folderShineGrad)" opacity="0.35" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+  <path class="front-flap flap-stroke" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.8" d="M9,26 L79,26 Q84,26 84,31 L84,79 L4,79 L4,31 Q4,26 9,26 Z"></path>
+</g>
+</svg>
+<div class="folder-db-icon">
+<svg fill="none" stroke="#3a7bd5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 2 24 19">
+<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+<path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
+<path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"></path>
+<path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"></path>
+</svg>
+</div></div>
+<span class="folder-label">DCL</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- ══ TOPICS TOGGLE — mobile/tablet floating button ══ -->
+<div id="topic-toggle">
+<div aria-label="Topics" id="topic-panel" role="dialog">
+<div class="tp-panel-label">Topics</div>
+<div class="topics">
+<div class="topic-item topic-item-active" onclick="location.href='sqlbasics.html'" style="cursor:pointer;">
+<a class="topic-head" href="sqlbasics.html">Basics</a>
+</div>
+<div class="topic-item" onclick="location.href='sqldatatypes.html'" style="cursor:pointer;">
+<a class="topic-head" href="sqldatatypes.html">Datatypes</a>
+</div>
+<div class="topic-item" onclick="location.href='sqlconstraints.html'" style="cursor:pointer;">
+<a class="topic-head" href="sqlconstraints.html">Constraints</a>
+</div>
+<!-- <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqloperators.html">Operators</a>
+      </div> -->
+</div>
+</div>
+<button aria-expanded="false" aria-label="Toggle topics panel" id="topic-toggle-btn">
+<span class="tp-icon">
+<svg class="icon-list" viewbox="0 0 24 24">
+<line x1="8" x2="21" y1="6" y2="6"></line>
+<line x1="8" x2="21" y1="12" y2="12"></line>
+<line x1="8" x2="21" y1="18" y2="18"></line>
+<line x1="3" x2="3.01" y1="6" y2="6"></line>
+<line x1="3" x2="3.01" y1="12" y2="12"></line>
+<line x1="3" x2="3.01" y1="18" y2="18"></line>
+</svg>
+<svg class="icon-close" viewbox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+</span>
+<span class="tp-label">Topics</span>
+</button>
+</div>
+<!-- ══ THEME TOGGLE — single button ══ -->
+<div id="theme-toggle">
+<button aria-label="Toggle theme" id="toggle-btn">
+<span class="t-icon">
+<svg class="icon-sun" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="5"></circle>
+<line x1="12" x2="12" y1="1" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="23"></line>
+<line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line>
+<line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line>
+<line x1="1" x2="3" y1="12" y2="12"></line>
+<line x1="21" x2="23" y1="12" y2="12"></line>
+<line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line>
+<line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line>
+</svg>
+<svg class="icon-moon" viewbox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+</svg>
+</span>
+<span class="t-label" id="toggle-label">Light Mode</span>
+</button>
+</div>
+<script src="sql.js"></script>
+</body>
+</html>

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>bin » sql-constraints</title>
+<link rel="icon" type="image/png" href="data:image/png">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="sql.css"/>
+<link rel="stylesheet" href="bin-logo.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<!-- ── Name-column overlay ── -->
+<style>
+  #name-overlay,
+  #name-overlay-2,
+  #name-overlay-3,
+  #name-overlay-fk-parent,
+  #name-overlay-fk-child {
+    position: absolute;
+    background: transparent;
+    border: 2px dashed;
+    border-radius: 4px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+
+</style>
+
+</head>
+<body>
+
+<canvas id="space"></canvas>
+
+<nav>
+  <div class="bin-wrap" id="binWrap">
+
+  <!-- Single sliding page -->
+  <div class="slide-page" id="slidePage">
+
+    <!-- Link track img / Link proceed name-->
+    <img class="sl-name" src="sql_logo.png" alt="SQL Logo" width="15px" height="15px"/>
+
+    <!-- Line elements -->
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+  </div>
+
+  <!-- Folder SVG -->
+  <svg class="folder-svg" viewBox="0 0 120 100">
+    <defs>
+      <!-- Vibrant: electric blue → deep purple → hot pink → orange -->
+      <linearGradient id="paintBack" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#3a6ff7"/>
+        <stop offset="40%"  stop-color="#6b30d6"/>
+        <stop offset="70%"  stop-color="#ff3cac"/>
+        <stop offset="100%" stop-color="#ff6b1a"/>
+      </linearGradient>
+      <linearGradient id="paintTab" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#ff3cac"/>
+        <stop offset="50%"  stop-color="#ff6b1a"/>
+        <stop offset="100%" stop-color="#3a6ff7"/>
+      </linearGradient>
+      <linearGradient id="paintFront" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#3a6ff7"/>
+        <stop offset="35%"  stop-color="#6b30d6"/>
+        <stop offset="65%"  stop-color="#ff3cac"/>
+        <stop offset="100%" stop-color="#ff6b1a"/>
+      </linearGradient>
+    </defs>
+    <rect class="folder-back" x="10" y="28" width="100" height="66" rx="6"/>
+    <path class="folder-tab" d="M10 28 L10 18 Q10 13 15 13 L46 13 Q51 13 53 18 L57 28 Z"/>
+
+    <g class="paper p3"><rect x="24" y="36" width="72" height="52" rx="3"/></g>
+    <g class="paper p2"><rect x="20" y="34" width="72" height="52" rx="3"/></g>
+    <g class="paper p1"><rect x="16" y="32" width="72" height="52" rx="3"/></g>
+    <g class="paper-lines">
+      <line x1="22" y1="44" x2="82" y2="44"/>
+      <line x1="22" y1="52" x2="78" y2="52"/>
+      <line x1="22" y1="60" x2="80" y2="60"/>
+      <line x1="22" y1="68" x2="72" y2="68"/>
+    </g>
+
+    <rect class="folder-front" x="10" y="28" width="100" height="66" rx="6"/>
+    <text class="bin-label" x="60" y="75">BIN</text>
+  </svg>
+
+  </div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#"        class="active">Home</a></li>
+    <li><a href="#learn">Learn</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mob-menu" id="mob">
+  <a href="#">Home</a>
+  <a href="#learn">Learn</a>
+  <a href="#projects">Projects</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<main id="void">
+
+  <!-- AI Content Section -->
+  <div id="section">
+    <div class="header">
+      <div class="header-dot"></div>
+      <h2>SQL<span>( Constraints )<!--( Structured Query Language )--></span></h2>
+      <span>edition · 1.3</span>
+    </div>
+    <div class="scroll-body">
+
+      <div class="topic">
+        <div class="topic-tag">Overview</div>
+        <h3>What are Constraints?</h3>
+        <p style="text-indent:24px"><em class="highlight">Constraints</em> are <em>column-level rules</em> in a database, that <em class="highlight">enforce data integrity</em> and <em class="highlight">consistency</em> by restricting the type, format and permissible values store in a column.</p>
+        <p class="or">( or )</p>
+        <p style="text-indent:24px"><em class="highlight">Constraints</em> are <em>column-level rules</em>, that controls how data is stored in a database to keep it <em>accurate</em> and <em>consistent</em>.</p>
+      </div>
+
+      <div class="topic">
+        <div class="topic-tag">path</div>
+        <h3>Types </h3>
+        <div class="timeline">
+          <div class="tl-item"><a class="tl-head" href="#unique">UNIQUE</a><span class="tl-text">can't accept <em>repeated</em> values.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#notnull">NOT NULL</a><span class="tl-text">can't accept <em>empty</em> values.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#check">CHECK</a><span class="tl-text">extra <em>Validation</em> process.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#default">DEFAULT</a><span class="tl-text">if <em>none</em> is provided.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#entity">ENTITY</a><span class="tl-text">Combination of <em>Unique</em> &amp; <em>not-Null.</em></span></div>
+          <div class="tl-item"><a class="tl-head" href="#refer">REFER</a><span class="tl-text">A <em>connection</em>.</span></div>
+          <!-- <div class="tl-item"><a class="tl-head" href="#semantic">SEMANTIC</a><span class="tl-text"><em>Correctness</em> of data.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#domain">DOMAIN</a><span class="tl-text"><em>permissable</em> values.</span></div> -->
+        </div>
+      </div>
+
+      <div class="topic" id="unique">
+        <div class="topic-tag">v1.3-unique</div>
+        <h3>Unique Constraint - no repetition</h3>
+        <p style="text-indent:24px">It is a Constraint, which can't accept <em class="highlight">repeated</em> / <em class="highlight">duplicated</em> values.</p>
+        <p class="small-or">( or )</p>
+        <p style="text-indent:24px"> A Constraint, which prevents <em class="highlight">duplicate</em> values in a table column, called as Unique constraint.</p>
+        <p class="small-or">( or )</p>
+        <p style="text-indent:24px"> An Unique Constraint, ensures that all values in a column are  <em class="highlight">distinct</em> and <em>prevents duplicate</em> entries.</p>
+        <h5 class="syntax-head">Syntax :</h5>
+        <p class="syntax-code"><span class="syn-fn">UNIQUE</span></p>
+          <p>Let's take an example,</p>
+            <!-- ── TABLES + SVG CONNECTOR WRAPPER ── -->
+            <div style="position:relative; display:flex; justify-content:center; width:100%;">
+
+              <div class="rdbms-tables-wrap" style="position:relative; flex-direction:column; align-items:flex-start; padding-left:28px; padding-bottom:120px;">
+
+                <!-- ── Floating dashed overlay over Degree column ── -->
+                <div id="name-overlay"></div>
+
+                <!-- Table 1 · big (4 cols) · TOP -->
+                <div class="rdbms-table-block">
+                  <div class="tbl-title" style="text-align:center;">Student Table</div>
+                  <div style="overflow-x:auto;">
+                    <table class="rdbms-tbl" id="rdbms-t1">
+                      <thead>
+                        <tr>
+                          <th class="pk" id="t1-id-header">ID</th>
+                          <th>Student_Name</th>
+                          <th>Degree</th>
+                          <th>City</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="pk">1</td>
+                          <td>Ameen</td>
+                          <td>B.Tech</td>
+                          <td><code>NULL</code></td>
+                        </tr>
+                        <tr>
+                          <td class="pk">2</td>
+                          <td>Dhana</td>
+                          <td>B.Tech</td>
+                          <td>DEL</td>
+                        </tr>
+                        <tr>
+                          <td class="pk">3</td>
+                          <td>Imran</td>
+                          <td>M.Tech</td>
+                          <td>CCU</td>
+                        </tr>
+                        <tr>
+                          <td class="pk">4</td>
+                          <td>Somu</td>
+                          <td>M.Sc.</td>
+                          <td>BLR</td>
+                        </tr>
+                        <tr>
+                          <td class="pk">5</td>
+                          <td>Dileep</td>
+                          <td>MCA</td>
+                          <td>HYD</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- ── SVG arrow: tail at Degree column bottom, head pointing right ── -->
+                <svg id="degree-arrow-svg"
+                     style="position:absolute;top:0;left:0;pointer-events:none;z-index:5;overflow:visible;"
+                     width="0" height="0">
+                  <defs>
+                    <marker id="deg-arrowhead" markerWidth="10" markerHeight="8"
+                            refX="0" refY="4" orient="auto"
+                            markerUnits="userSpaceOnUse">
+                      <polygon points="0 0, 10 4, 0 8" fill="#ff4d4d"/>
+                    </marker>
+                  </defs>
+                  <path id="deg-arrow-path"
+                        fill="none" stroke="#ff4d4d" stroke-width="2.2"
+                        marker-end="url(#deg-arrowhead)"/>
+                  <text id="deg-arrow-label" fill="#ff4d4d"
+                        font-size="13" font-family="inherit" font-style="italic"
+                        text-anchor="middle">
+                    <tspan id="deg-text-l1">This column doesnot satisfy the Unique Constraint,</tspan>
+                    <tspan id="deg-text-l2" dy="18">because the value 'B.Tech' appears more than once.</tspan>
+                  </text>
+                </svg>
+              </div>
+            </div>
+
+        <p style="text-indent: 12px;">
+            In the above example, the 'City' column is defined with a UNIQUE constraint, meaning it does not allow duplicate values, as each city has a distinct code. If a record is inserted with a city that already exists, an error will occur, ensuring all city values remain unique.
+        </p>
+        <h4 class="drawback-title">Note :</h4>
+        <p style="text-indent: 12px;">A UNIQUE constraint can allow NULL values.</p>
+        <p>
+          <span class="drawback-title" style="border:none; opacity:0.8">Reason :</span>
+          NULL is treated as unknown, so multiple NULL values are usually allowed ( depends on the database system ).
+        </p>
+      </div>
+
+      <!----- Not Null ----->
+      <div class="topic" id="notnull">
+        <div class="topic-tag">v1.2-Notnull</div>
+        <h3>Null Constraint - Punish empty</h3>
+        <p style="text-indent:24px">It is a Constraint, which can't accept <em class="highlight">Empty</em> / <em class="highlight">Null</em> values.</p>
+        <p class="small-or">( or )</p>
+        <p style="text-indent:24px"> A Constraint, whose attribute values can't be <em class="highlight">Null</em>.</p>
+        <h5 class="syntax-head">Syntax :</h5>
+        <p class="syntax-code"><span class="syn-fn">NOT NULL</span></p>
+        <p>From the previous example,</p>
+            <!-- ── TABLES + SVG CONNECTOR WRAPPER ── -->
+            <div style="position:relative; display:flex; justify-content:center; width:100%;">
+
+              <div class="rdbms-tables-wrap" style="position:relative; flex-direction:column; align-items:flex-start; padding-left:28px; padding-bottom:120px;">
+
+                <!-- ── Floating dashed overlay over City column ── -->
+                <div id="name-overlay-2"></div>
+
+                <!-- Table 1 · big (4 cols) · TOP -->
+                <div class="rdbms-table-block">
+                  <div class="tbl-title" style="text-align:center;">Student Table</div>
+                  <div style="overflow-x:auto;">
+                    <table class="rdbms-tbl" id="rdbms-t2">
+                      <thead>
+                        <tr>
+                          <th class="pk" id="t2-id-header">ID</th>
+                          <th>Student_Name</th>
+                          <th>Degree</th>
+                          <th>City</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="pk">1</td>
+                          <td>Ameen</td>
+                          <td>B.Tech</td>
+                          <td><code>NULL</code></td>
+                        </tr>
+                        <tr>
+                          <td class="pk">2</td>
+                          <td>Dhana</td>
+                          <td>B.Tech</td>
+                          <td>DEL</td>
+                        </tr>
+                        <tr>
+                          <td class="pk">3</td>
+                          <td>Imran</td>
+                          <td>M.Tech</td>
+                          <td>CCU</td>
+                        </tr>
+                        <tr>
+                          <td class="pk">4</td>
+                          <td>Somu</td>
+                          <td>M.Sc.</td>
+                          <td>BLR</td>
+                        </tr>
+                        <tr>
+                          <td class="pk">5</td>
+                          <td>Dileep</td>
+                          <td>MCA</td>
+                          <td>HYD</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- ── SVG arrow: tail at City column bottom, head pointing down ── -->
+                <svg id="city-arrow-svg"
+                     style="position:absolute;top:0;left:0;pointer-events:none;z-index:5;overflow:visible;"
+                     width="0" height="0">
+                  <defs>
+                    <marker id="city-arrowhead" markerWidth="10" markerHeight="8"
+                            refX="0" refY="4" orient="auto"
+                            markerUnits="userSpaceOnUse">
+                      <polygon points="0 0, 10 4, 0 8" fill="#ff4d4d"/>
+                    </marker>
+                  </defs>
+                  <path id="city-arrow-path"
+                        fill="none" stroke="#ff4d4d" stroke-width="2.2"
+                        marker-end="url(#city-arrowhead)"/>
+                  <text id="city-arrow-label" fill="#ff4d4d"
+                        font-size="13" font-family="inherit" font-style="italic"
+                        text-anchor="middle">
+                    <tspan id="city-text-l1">This column does not satisfy the NOT NULL Constraint,</tspan>
+                    <tspan id="city-text-l2" dy="18">because it contains a 'NULL' value in the City column.</tspan>
+                  </text>
+                </svg>
+              </div>
+            </div>
+        <p style="text-indent: 12px;">
+          In the above example, the 'Degree' column is defined with a NOT NULL constraint, meaning it does not allow empty values. If a record is inserted without specifying a degree, an error will occur, ensuring that every entry has a valid degree value.
+        </p>
+        <h4 class="drawback-title">Note :</h4>
+        <p style="text-indent: 12px;">NOT NULL constraint can allow duplicate values.</p>
+      </div>
+
+
+      <div class="topic" id="check">
+        <div class="topic-tag">v1.3-check</div>
+        <h3>Check Constraint - restriction </h3>
+        <p style="text-indent:24px">An <em class="highlight">Extra Validation</em> process assigned to the column with the help of conditions, if the conditions are satisfy it returns <em>true</em> then accept the value else <em>not</em> accept value.</p>
+        <p class="or">( or )</p>
+        <p style="text-indent:24px">A Constraint, which allows you to specify a condition that must be met for the data to be inserted or updated in a column.</p> 
+        <p class="or">( or )</p>
+        <p style="text-indent:24px">A <em class="highlight">Check</em> constraint is a rule that validates whether the data meets a specific condition.</p>
+        <h5 class="syntax-head">Syntax :</h5>
+        <p class="syntax-code">
+          <span class="syn-fn">CHECK(</span>
+          <span class="syn-arg">condition</span>
+          <span class="syn-fn">)</span>
+        </p>
+        <p>For example,</p>
+        <p style="text-indent:12px;">
+          In the Student Table, the 'City' column is defined with a constraint that ensures it accepts only city codes of exactly 3 characters (such as HYD, BLR), preventing any values that do not meet this length requirement.
+        </p>
+
+      </div>
+      <div class="topic" id="default">
+        <div class="topic-tag">v1.3-Default</div>
+        <h3>Default - automatic</h3>
+        <p style="text-indent: 24px;">
+          A <em class="highlight">Default</em> <em>constraint</em> assigns a predefined value to a column when <em class="highlight">no</em> value is provided during insertion.
+          It ensures that the column always contains a valid value even if the user does not specify one.
+        </p>
+        <p class="or">( or )</p>
+        <p style="text-indent: 24px;">
+          It is a constraint, which assigns a default value to a column when <em class="highlight">no</em> value is provided during insertion.
+        </p>
+        <h5 class="syntax-head">Syntax :</h5>
+        <p class="syntax-code">
+          <span class="syn-fn">DEFAULT</span>
+        </p>
+
+      </div>
+      <div class="topic" id="entity">
+        <div class="topic-tag">v1.3-Entity</div>
+        <h3>Primary Key - Identitfier</h3>
+        <p style="text-indent: 24px;">
+          <em class="highlight">Primary Key</em> also as an <em class="highlight">Entitiy Integrity</em> <em>constraint</em>, It is a constraint that combines <em class="highlight">UNIQUE</em> and <em class="highlight">NOT NULL</em> properties to <em>uniquely</em> identify each row in a table and ensures the column value is left <em>null</em>.
+        </p>
+        <h5 class="syntax-head">Syntax :</h5>
+        <p class="syntax-code">
+          <span class="syn-fn">PRIMARY KEY</span>
+        </p>
+        <h4 class="drawback-title">Characteristics :</h4>
+        <ul>
+          <li>Primary Key cannot accpet <em>Repeated</em> &amp; <em>Null</em> values ( or ) 
+            <em class="highlight">No</em> attributes participating in primary key is allowed to accept <em>Duplicate</em> and <em>Null</em> values</li>
+          <li>It is not <em>Mandatory</em> but highly recommanded - as it helps in <em class="highlight">joining</em> with another table.</li>
+          <li>It is <em>immutable</em> — once created, the value of a primary key cannot be changed.</li>
+        </ul>
+
+          <p>Lets take an example from 'Student Table',</p>
+            <!-- ── TABLES + SVG CONNECTOR WRAPPER ── -->
+            <div style="position:relative; display:flex; justify-content:center; width:100%;">
+
+              <div class="rdbms-tables-wrap" style="position:relative; flex-direction:column; align-items:flex-start; padding-left:28px; padding-bottom:12px;">
+
+                <!-- ── Floating dashed overlay over ID column (Primary Key) ── -->
+                <div id="name-overlay-3"></div>
+
+                <!-- Table · big (4 cols) · PRIMARY KEY section -->
+                <div class="rdbms-table-block">
+                  <div class="tbl-title" style="text-align:center;">Student Table</div>
+                  <div style="overflow-x:auto;">
+                    <table class="rdbms-tbl" id="rdbms-t3">
+                      <thead>
+                        <tr>
+                          <th class="pk" id="t3-id-header">ID</th>
+                          <th>Student_Name</th>
+                          <th>Degree</th>
+                          <th>City</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="pk">1</td>
+                          <td>Ameen</td>
+                          <td>B.Tech</td>
+                          <td><code>NULL</code></td>
+                        </tr>
+                        <tr>
+                          <td class="pk">2</td>
+                          <td>Dhana</td>
+                          <td>B.Tech</td>
+                          <td>DEL</td>
+                        </tr>
+                        <tr>
+                          <td class="pk">3</td>
+                          <td>Imran</td>
+                          <td>M.Tech</td>
+                          <td>CCU</td>
+                        </tr>
+                        <tr>
+                          <td class="pk">4</td>
+                          <td>Somu</td>
+                          <td>M.Sc.</td>
+                          <td>BLR</td>
+                        </tr>
+                        <tr>
+                          <td class="pk">5</td>
+                          <td>Dileep</td>
+                          <td>MCA</td>
+                          <td>HYD</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+        <p style="text-indent: 12px;">
+          In the above example, the 'ID' column is defined as the <strong>Primary Key</strong>, meaning it uniquely identifies each row. It does not allow duplicate or NULL values, ensuring every student has a distinct identifier.
+        </p>
+      </div>
+      <div class="topic" id="refer">
+        <div class="topic-tag">v1.3-Refer</div>
+        <h3>Foreign Key - Reference</h3>
+        <p style="text-indent: 24px;">
+          <em class="highlight">Foreign Key</em> also as <em class="highlight">Referential Integrity</em> <em>constraint</em>, It is a constraint used to estalish a <em class="highlight">relation</em> between <em class="highlight">2</em> tables by referencing the <em>primary</em> key of another table.
+        </p>
+        <h5 class="syntax-head">Syntax :</h5>
+        <p class="syntax-code">
+          <span class="syn-fn">FOREIGN KEY</span>
+        </p>
+        <h4 class="drawback-title">Characteristics :</h4>
+        <ul>
+          <li>Foreign Key can accpet <em>duplicate</em> &amp; <em>null</em> values.</li>
+          <li>A table can have <em>multiple</em> foreign key columns.</li>
+          <li>A foreign key exists in the <em>child</em> table and <em class="highlight">references</em> the <em>primary</em> key in the parent table.</li>
+        </ul>
+
+          <p>Lets take an example,</p>
+            <!-- ── TABLES + SVG CONNECTOR WRAPPER ── -->
+            <div style="position:relative; display:flex; justify-content:center; width:100%;">
+
+              <div class="rdbms-tables-wrap" style="position:relative; flex-direction:column; align-items:center; padding-bottom:12px;">
+
+                <!-- ── Floating dashed overlay over ID column of Student Table (FK section) ── -->
+                <div id="name-overlay-fk-parent"></div>
+
+                <!-- ── Floating dashed overlay over ID column of Marks Table (FK section) ── -->
+                <div id="name-overlay-fk-child"></div>
+
+                <!-- Student Table (Parent) -->
+                <div class="rdbms-table-block">
+                  <div class="tbl-title" style="text-align:center;">Student Table &nbsp;<span style="font-size:0.7em;opacity:0.6;">(Parent)</span></div>
+                  <div style="overflow-x:auto;">
+                    <table class="rdbms-tbl" id="rdbms-fk-parent">
+                      <thead>
+                        <tr>
+                          <th class="pk" id="fk-parent-id-header">ID</th>
+                          <th>Student_Name</th>
+                          <th>Degree</th>
+                          <th>City</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td class="pk">1</td><td>Ameen</td><td>B.Tech</td><td><code>NULL</code></td></tr>
+                        <tr><td class="pk">2</td><td>Dhana</td><td>B.Tech</td><td>DEL</td></tr>
+                        <tr><td class="pk">3</td><td>Imran</td><td>M.Tech</td><td>CCU</td></tr>
+                        <tr><td class="pk">4</td><td>Somu</td><td>M.Sc.</td><td>BLR</td></tr>
+                        <tr><td class="pk">5</td><td>Dileep</td><td>MCA</td><td>HYD</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- SVG connector arrow between the two tables -->
+                <svg id="fk-connector-svg"
+                     style="position:absolute;top:0;left:0;pointer-events:none;z-index:5;overflow:visible;"
+                     width="0" height="0">
+                  <defs>
+                    <marker id="fk-dot-start" markerWidth="8" markerHeight="8"
+                            refX="4" refY="4" orient="auto"
+                            markerUnits="userSpaceOnUse">
+                      <circle cx="4" cy="4" r="3.5" fill="#888888"/>
+                    </marker>
+                    <marker id="fk-dot-end" markerWidth="8" markerHeight="8"
+                            refX="4" refY="4" orient="auto"
+                            markerUnits="userSpaceOnUse">
+                      <circle cx="4" cy="4" r="3.5" fill="#888888"/>
+                    </marker>
+                  </defs>
+                  <path id="fk-connector-path"
+                        fill="none" stroke="#888888" stroke-width="2"
+                        marker-start="url(#fk-dot-start)"
+                        marker-end="url(#fk-dot-end)"/>
+                </svg>
+
+                <!-- Marks Table (Child) -->
+                <div class="rdbms-table-block" style="margin-top:32px;">
+                  <div class="tbl-title" style="text-align:center;">Marks Table &nbsp;<span style="font-size:0.7em;opacity:0.6;">(Child)</span></div>
+                  <div style="overflow-x:auto;">
+                    <table class="rdbms-tbl" id="rdbms-fk-child">
+                      <thead>
+                        <tr>
+                          <th class="pk" id="fk-child-id-header">ID</th>
+                          <th>Marks</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td class="pk">1</td><td>78</td></tr>
+                        <tr><td class="pk">2</td><td>91</td></tr>
+                        <tr><td class="pk">3</td><td>65</td></tr>
+                        <tr><td class="pk">4</td><td>83</td></tr>
+                        <tr><td class="pk">5</td><td>74</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+        <p style="text-indent: 12px;">
+          In the above example, the <strong>Marks Table</strong> holds a Foreign Key on the 'ID' column that references the Primary Key 'ID' in the <strong>Student Table</strong>. This link ensures that marks can only be recorded for students who actually exist — maintaining referential integrity between the two tables.
+        </p>
+      </div>
+
+      <!-- ── PAGE NAV ── -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding: 1.4rem 1rem 1.8rem;">
+
+        <!-- Previous -->
+        <a href="sqlintro.html" class="page-nav-btn" id="nav-prev">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+            <path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Previous</span>
+          <span class="nav-hint">( Basics )</span>
+        </a>
+
+        <!-- Next -->
+        <a href="sqlconst.html" class="page-nav-btn" id="nav-next">
+          <span class="nav-hint">( Constraints )</span>
+          <span>Next</span>
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+            <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+      </div>
+      <!-- ── END PAGE NAV ── -->
+
+    </div>
+  </div>
+
+  <!-- ── SIDEBAR ── -->
+  <aside id="sidebar">
+
+    <!-- Social Links -->
+    <!--
+    <div class="sb-section">
+      <div class="sb-label">Connect</div>
+      <a class="sb-link" href="https://www.instagram.com/iacc.bin/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="sb-name">Instagram</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <a class="sb-link" href="https://www.youtube.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="sb-name">YouTube</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <a class="sb-link" href="https://github.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </span>
+        <span class="sb-name">GitHub</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <a class="sb-link" href="https://x.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg>
+        </span>
+        <span class="sb-name">X / Twitter</span>
+        <span class="sb-arrow">↗</span>
+      </a> -->
+    </div>
+
+    <!-- Concepts -->
+    <div class="sb-section">
+      <div class="sb-label">Topics</div>
+      <div class="sb-concepts">
+        <span class="sb-pill">
+          SQL <span class="sb-pill-tag">DB</span>
+        </span>
+        <div class="topics">
+          <div class="topic-item" onclick="location.href='sqlbasics.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlbasics.html">Basics</a>
+          </div>
+          <div class="topic-item" onclick="location.href='sqldatatypes.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqldatatypes.html">Datatypes</a>
+          </div>
+          <div class="topic-item topic-item-active" onclick="location.href='sqlconstraints.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlconstraints.html">Constraints</a>
+          </div>
+          <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqloperators.html">Operators</a>
+          </div>
+          <!-- <div class="topic-item" onclick="location.href='sqlfunctions.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlfunctions.html">Functions</a>
+          </div>
+          <div class="topic-item" onclick="location.href='db.html'" style="cursor:pointer;">
+            <a class="topic-head" href="db.html">Database</a>
+          </div>
+          <div class="topic-item" onclick="location.href='ddl.html'" style="cursor:pointer;">
+            <a class="topic-head" href="ddl.html">DDL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dml.html'" style="cursor:pointer;">
+            <a class="topic-head" href="dml.html">DML</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dql.html'" style="cursor:pointer;">
+            <a class="topic-head" href="dql.html">DQL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='.html'" style="cursor:pointer;">
+            <a class="topic-head" href="subqueries.html">Sub Query</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dql.html'" style="cursor:pointer;">
+            <a class="topic-head" href="joins.html">Joins</a>
+          </div>
+          <div class="topic-item" onclick="location.href='sqlsets.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlsets.html">Set Operators</a>
+          </div>
+          <div class="topic-item" onclick="location.href='tcl.html'" style="cursor:pointer;">
+            <a class="topic-head" href="tcl.html">TCL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='dcl.html'" style="cursor:pointer;">
+            <a class="topic-head" href="dcl.html">DCL</a>
+          </div>
+          <div class="topic-item" onclick="location.href='view_trig.html'" style="cursor:pointer;">
+            <a class="topic-head" href="view_trig.html">Views, Triggers</a>
+          </div> -->
+        </div>
+      </div>
+        <!-- <a class="sb-pill" href="https://www.python.org/" target="_blank" rel="noopener">
+          Python <span class="sb-pill-tag">Lang</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/machine_learning" target="_blank" rel="noopener">
+          Machine Learning <span class="sb-pill-tag">ML</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Deep_learning" target="_blank" rel="noopener">
+          Deep Learning <span class="sb-pill-tag">DL</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Artificial_intelligence" target="_blank" rel="noopener">
+          Artificial Intelligence <span class="sb-pill-tag">AI</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Natural_language_processing" target="_blank" rel="noopener">
+          NLP <span class="sb-pill-tag">Text</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Computer_vision" target="_blank" rel="noopener">
+          Computer Vision <span class="sb-pill-tag">CV</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Reinforcement_learning" target="_blank" rel="noopener">
+          Reinforcement Learning <span class="sb-pill-tag">RL</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Data_science" target="_blank" rel="noopener">
+          Data Science <span class="sb-pill-tag">DS</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Large_language_model" target="_blank" rel="noopener">
+          LLMs <span class="sb-pill-tag">Gen</span>
+        </a> -->
+      </div>
+    </div>
+
+  </aside>
+
+</main>
+
+<!-- ══ TOPICS TOGGLE — mobile/tablet floating button ══ -->
+<div id="topic-toggle">
+
+  <!-- Slide-up topics panel -->
+  <div id="topic-panel" role="dialog" aria-label="Topics">
+    <div class="tp-panel-label">Topics</div>
+    <div class="topics">
+      <div class="topic-item" onclick="location.href='sqlbasics.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlbasics.html">Basics</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqldatatypes.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqldatatypes.html">Datatypes</a>
+      </div>
+      <div class="topic-item topic-item-active" onclick="location.href='sqlconstraints.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlconstraints.html">Constraints</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqloperators.html">Operators</a>
+      </div>
+      <!-- <div class="topic-item" onclick="location.href='sqlfunctions.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlfunctions.html">Functions</a>
+      </div>
+      <div class="topic-item" onclick="location.href='db.html'" style="cursor:pointer;">
+        <a class="topic-head" href="db.html">Database</a>
+      </div>
+      <div class="topic-item" onclick="location.href='ddl.html'" style="cursor:pointer;">
+        <a class="topic-head" href="ddl.html">DDL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='dml.html'" style="cursor:pointer;">
+        <a class="topic-head" href="dml.html">DML</a>
+      </div>
+      <div class="topic-item" onclick="location.href='dql.html'" style="cursor:pointer;">
+        <a class="topic-head" href="dql.html">DQL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='subqueries.html'" style="cursor:pointer;">
+        <a class="topic-head" href="subqueries.html">Sub Query</a>
+      </div>
+      <div class="topic-item" onclick="location.href='joins.html'" style="cursor:pointer;">
+        <a class="topic-head" href="joins.html">Joins</a>
+      </div>
+      <div class="topic-item" onclick="location.href='sqlsets.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqlsets.html">Set Operators</a>
+      </div>
+      <div class="topic-item" onclick="location.href='tcl.html'" style="cursor:pointer;">
+        <a class="topic-head" href="tcl.html">TCL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='dcl.html'" style="cursor:pointer;">
+        <a class="topic-head" href="dcl.html">DCL</a>
+      </div>
+      <div class="topic-item" onclick="location.href='view_trig.html'" style="cursor:pointer;">
+        <a class="topic-head" href="view_trig.html">Views, Triggers</a>
+      </div> -->
+    </div>
+  </div>
+
+  <button id="topic-toggle-btn" aria-label="Toggle topics panel" aria-expanded="false">
+    <span class="tp-icon">
+      <!-- List icon (default — panel closed) -->
+      <svg class="icon-list" viewBox="0 0 24 24">
+        <line x1="8" y1="6"  x2="21" y2="6"/>
+        <line x1="8" y1="12" x2="21" y2="12"/>
+        <line x1="8" y1="18" x2="21" y2="18"/>
+        <line x1="3" y1="6"  x2="3.01" y2="6"/>
+        <line x1="3" y1="12" x2="3.01" y2="12"/>
+        <line x1="3" y1="18" x2="3.01" y2="18"/>
+      </svg>
+      <!-- X icon (panel open) -->
+      <svg class="icon-close" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </span>
+    <span class="tp-label">Topics</span>
+  </button>
+</div>
+
+<!-- ══ THEME TOGGLE — single button ══ -->
+<div id="theme-toggle">
+  <button id="toggle-btn" aria-label="Toggle theme">
+    <span class="t-icon">
+      <!-- Sun: shown in dark mode (click → go light) -->
+      <svg class="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- Moon: shown in light mode (click → go dark) -->
+      <svg class="icon-moon" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </span>
+    <span class="t-label" id="toggle-label">Light Mode</span>
+  </button>
+</div>
+
+
+<script src="sql.js"></script>
+</body>
+</html>
